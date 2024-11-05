@@ -13,6 +13,23 @@
 using namespace std;
 
 const int MAX_LENGTH = 16;
-const int PLUGIN_HEIGHT = 1200;
-const int PLUGIN_WIDTH = 1200;
+const int PLUGIN_HEIGHT = 800;
+const int PLUGIN_WIDTH = 800;
 
+class CustomSlider : public juce::Slider {
+    public:
+        CustomSlider() {};
+        CustomSlider(juce::RangedAudioParameter& rap) {};
+        ~CustomSlider() {};
+    private:
+
+};
+
+class CustomTextButton : public juce::TextButton {
+public:
+    CustomTextButton() {};
+    CustomTextButton(juce::AudioParameterBool& apb) {};
+    ~CustomTextButton() {};
+private:
+
+};

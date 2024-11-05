@@ -36,7 +36,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MetroGnome2AudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterBool>("ON/OFF", "On/Off", false));
     layout.add(std::make_unique<juce::AudioParameterFloat>("BPM", "bpm", juce::NormalisableRange<float>(1.f, 300.f, 0.1f, 0.25f), 120.f));
     layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_1", "Subdivision 1", 1, MAX_LENGTH, 1));
-    layout.add(std::make_unique<juce::AudioParameterInt>("SUBDVISION_2", "Subdivision 2", 1, MAX_LENGTH, 4));
+    layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_2", "Subdivision 2", 1, MAX_LENGTH, 4));
 
     return layout;
 
@@ -98,9 +98,9 @@ juce::AudioProcessorEditor* MetroGnome2AudioProcessor::createEditor()
 {
 
     //return GenericAudioProcessorEditor for generic sliders magically linked to APVTS (used for debugging/prototyping)
-    return new juce::GenericAudioProcessorEditor(*this);
+    //return new juce::GenericAudioProcessorEditor(*this);
 
-    //return new MetroGnome2AudioProcessorEditor (*this);
+    return new MetroGnome2AudioProcessorEditor (*this);
 }
 
 //==============================================================================
