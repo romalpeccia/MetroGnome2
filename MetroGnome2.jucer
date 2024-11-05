@@ -4,6 +4,10 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="k4tVpK" name="MetroGnome2">
     <GROUP id="{4F7DB09B-F2C5-28FC-4BFE-EC62A53400D0}" name="Source">
+      <FILE id="dZVLQu" name="PolyRhythmMetronome.cpp" compile="1" resource="0"
+            file="Source/PolyRhythmMetronome.cpp"/>
+      <FILE id="aS1B7K" name="PolyRhythmMetronome.h" compile="0" resource="0"
+            file="Source/PolyRhythmMetronome.h"/>
       <FILE id="PqKnRw" name="Utilities.cpp" compile="1" resource="0" file="Source/Utilities.cpp"/>
       <FILE id="IXSnUt" name="Utilities.h" compile="0" resource="0" file="Source/Utilities.h"/>
       <FILE id="C4wQrT" name="PluginProcessor.cpp" compile="1" resource="0"

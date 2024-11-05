@@ -15,3 +15,4 @@ using namespace std;
 const int MAX_LENGTH = 16;
 const int PLUGIN_HEIGHT = 1200;
 const int PLUGIN_WIDTH = 1200;
+
