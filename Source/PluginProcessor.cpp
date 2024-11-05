@@ -28,6 +28,22 @@ MetroGnome2AudioProcessor::~MetroGnome2AudioProcessor()
 {
 }
 
+
+juce::AudioProcessorValueTreeState::ParameterLayout MetroGnome2AudioProcessor::createParameterLayout() {
+    //Creates all the parameters that change based on the user input and returns them in a AudioProcessorValueTreeState::ParameterLayout object
+
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+    layout.add(std::make_unique<juce::AudioParameterBool>("ON/OFF", "On/Off", false));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("BPM", "bpm", juce::NormalisableRange<float>(1.f, 300.f, 0.1f, 0.25f), 120.f));
+    layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_1", "Subdivision 1", 1, MAX_LENGTH, 1));
+    layout.add(std::make_unique<juce::AudioParameterInt>("SUBDVISION_2", "Subdivision 2", 1, MAX_LENGTH, 4));
+
+    return layout;
+
+}
+
+
+
 //==============================================================================
 const juce::String MetroGnome2AudioProcessor::getName() const
 {
@@ -166,7 +182,11 @@ bool MetroGnome2AudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* MetroGnome2AudioProcessor::createEditor()
 {
-    return new MetroGnome2AudioProcessorEditor (*this);
+
+    //return GenericAudioProcessorEditor for generic sliders magically linked to APVTS (used for debugging/prototyping)
+    return new juce::GenericAudioProcessorEditor(*this);
+
+    //return new MetroGnome2AudioProcessorEditor (*this);
 }
 
 //==============================================================================
@@ -175,12 +195,21 @@ void MetroGnome2AudioProcessor::getStateInformation (juce::MemoryBlock& destData
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+
+    juce::MemoryOutputStream mos(destData, true);
+    apvts.state.writeToStream(mos);
 }
 
 void MetroGnome2AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+
+    auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
+    if (tree.isValid()) {
+        apvts.replaceState(tree);
+    }
+
 }
 
 //==============================================================================

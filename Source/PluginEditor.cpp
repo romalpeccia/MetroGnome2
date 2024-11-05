@@ -15,7 +15,7 @@ MetroGnome2AudioProcessorEditor::MetroGnome2AudioProcessorEditor (MetroGnome2Aud
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (PLUGIN_WIDTH, PLUGIN_HEIGHT);
 }
 
 MetroGnome2AudioProcessorEditor::~MetroGnome2AudioProcessorEditor()
@@ -25,12 +25,9 @@ MetroGnome2AudioProcessorEditor::~MetroGnome2AudioProcessorEditor()
 //==============================================================================
 void MetroGnome2AudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+
 }
 
 void MetroGnome2AudioProcessorEditor::resized()
