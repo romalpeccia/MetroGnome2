@@ -14,7 +14,7 @@ void PolyRhythmMetronome::resetMetronome() {
     //resets the class variables of the metronome, to be called when the metronome is stopped or has parameters changed
 
     samplesElapsed = 0;
-    //samplesPerDivision = calculateSamplesPerDivision(); TODO: where to put the calling of APVTS params? we could make it the callers responsibility to supply these variables?
+    //samplesPerDivision = calculateSamplesPerDivision(); 
 }
 
 int PolyRhythmMetronome::calculateSamplesPerDivision(int sampleRate, float bpm, int numDivisions, int beatsPerBar = 4) {

@@ -19,7 +19,6 @@ const int PLUGIN_WIDTH = 800;
 class CustomSlider : public juce::Slider {
     public:
         CustomSlider() {};
-        CustomSlider(juce::RangedAudioParameter& rap) {};
         ~CustomSlider() {};
     private:
 
@@ -28,8 +27,27 @@ class CustomSlider : public juce::Slider {
 class CustomTextButton : public juce::TextButton {
 public:
     CustomTextButton() {};
-    CustomTextButton(juce::AudioParameterBool& apb) {};
     ~CustomTextButton() {};
 private:
 
+};
+
+
+class ParameterChangeListener : public juce::AudioProcessorValueTreeState::Listener
+{
+public:
+
+    ParameterChangeListener();
+    ~ParameterChangeListener() {}
+
+    // This function is called whenever a parameter changes
+    void parameterChanged(const juce::String& parameterID, float newValue) override
+    {
+
+        //if (param 1, param 2, etc)
+
+
+        DBG("Parameter " << parameterID << " has changed to " << newValue);
+
+    }
 };

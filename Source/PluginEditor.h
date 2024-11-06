@@ -29,16 +29,15 @@ public:
     std::vector<juce::Component*> getVisibleComps();
 
 
-    CustomSlider bpmSlider, subdivision1Slider, subdivision2Slider;
-    //juce::AudioProcessorValueTreeState::SliderAttachment bpmAttachment;// , subdivision1Attachment, subdivision2Attachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bpmAttachment, subdivision1Attachment, subdivision2Attachment;
+
 private:
     MetroGnome2AudioProcessor& audioProcessor;
 
+    CustomSlider bpmSlider, subdivision1Slider, subdivision2Slider;
+    //juce::AudioProcessorValueTreeState::SliderAttachment bpmAttachment;// , subdivision1Attachment, subdivision2Attachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bpmAttachment, subdivision1Attachment, subdivision2Attachment;
 
     //CustomTextButton playButton;
-
-
     //juce::AudioProcessorValueTreeState::ButtonAttachment playAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MetroGnome2AudioProcessorEditor)

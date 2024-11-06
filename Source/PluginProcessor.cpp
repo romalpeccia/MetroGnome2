@@ -22,10 +22,19 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
                        )
 #endif
 {
+
+    apvts.addParameterListener("ON/OFF", parameterChangeListener.get());
+    apvts.addParameterListener("BPM", parameterChangeListener.get());
+    apvts.addParameterListener("SUBDIVISION_1", parameterChangeListener.get());
+    apvts.addParameterListener("SUBDIVISION_2", parameterChangeListener.get());
 }
 
 MetroGnome2AudioProcessor::~MetroGnome2AudioProcessor()
 {
+    apvts.removeParameterListener("ON/OFF", parameterChangeListener.get());
+    apvts.removeParameterListener("BPM", parameterChangeListener.get());
+    apvts.removeParameterListener("SUBDIVISION_1", parameterChangeListener.get());
+    apvts.removeParameterListener("SUBDIVISION_2", parameterChangeListener.get());
 }
 
 

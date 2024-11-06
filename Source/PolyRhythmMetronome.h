@@ -21,6 +21,7 @@ class PolyRhythmMetronome {
         void PolyRhythmMetronome::processBlock(juce::AudioBuffer<float>& buffer);
         void resetMetronome();
         int calculateSamplesPerDivision(int sampleRate, float bpm, int division, int beatsPerBar);
+        
 
         int samplesElapsed = 0; //number of samples elapsed since the PolyRhythmMachine started
         int samplesPerDivision; //number of samples representating the time taken to complete one subdivision

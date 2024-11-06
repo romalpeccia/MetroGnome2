@@ -61,6 +61,7 @@ public:
 
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
+    std::unique_ptr<ParameterChangeListener> parameterChangeListener = std::make_unique<ParameterChangeListener>();
 
     PolyRhythmMetronome metronome;
 
