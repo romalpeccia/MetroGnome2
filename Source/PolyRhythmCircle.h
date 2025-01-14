@@ -18,7 +18,7 @@ class PolyRhythmCircle : public juce::Component {
         ~PolyRhythmCircle(){};
 
         void paint(juce::Graphics & g) override;
-        void resized() override;
+        void resized() override;  
         void setNumSubdivisions(int num) {
             numSubdivisions = num;
             repaint();

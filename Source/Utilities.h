@@ -27,8 +27,6 @@ class CustomSliderLookNFeel : public juce::LookAndFeel_V4 {
         float maxSliderPos,
         const Slider::SliderStyle style, Slider& slider) override
     {
-
-        
             auto trackWidth = jmin(6.0f, slider.isHorizontal() ? (float)height * 0.25f : (float)width * 0.25f);
 
             Point<float> startPoint(slider.isHorizontal() ? (float)x : (float)x + (float)width * 0.5f,

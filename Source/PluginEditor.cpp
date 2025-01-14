@@ -48,13 +48,13 @@ void MetroGnome2AudioProcessorEditor::resized()
     // subcomponents in your editor..
     int margin = 5;
     juce::Rectangle<int> bounds = getLocalBounds();
-    juce::Rectangle<int> topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.33 + margin); //TODO add top margin
+    juce::Rectangle<int> topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.33 + margin).withTrimmedTop(margin);
     juce::Rectangle<int> bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.66 + margin);
     juce::Rectangle<int> bottomLeftBounds = bottomBounds.withTrimmedRight(bounds.getWidth() * 0.66 + margin);
     juce::Rectangle<int> bottomRightBounds = bottomBounds.withTrimmedLeft(bounds.getWidth() * 0.66 + margin);
     juce::Rectangle<int> bottomMiddleBounds = bottomBounds.withTrimmedLeft(bounds.getWidth() * 0.33 + margin).withTrimmedRight(bounds.getWidth() * 0.33 + margin);
-
-    prc.setBounds(topBounds);
+    juce::Rectangle<int> prcBounds = topBounds.withTrimmedLeft(bounds.getWidth() * 0.15 + margin).withTrimmedRight(bounds.getWidth() * 0.15 + margin);
+    prc.setBounds(prcBounds);
     bpmSlider.setBounds(bottomRightBounds);
     subdivision1Slider.setBounds(bottomMiddleBounds);
     subdivision2Slider.setBounds(bottomLeftBounds);
