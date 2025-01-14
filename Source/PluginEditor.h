@@ -11,20 +11,20 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "Utilities.h"
-
+#include "PolyRhythmCircle.h"
 //==============================================================================
 /**
 */
-class MetroGnome2AudioProcessorEditor : public juce::AudioProcessorEditor
+class MetroGnome2AudioProcessorEditor : public juce::AudioProcessorEditor, juce::Slider::Listener
 {
 public:
-    MetroGnome2AudioProcessorEditor(MetroGnome2AudioProcessor&);
+    MetroGnome2AudioProcessorEditor(MetroGnome2AudioProcessor&, juce::AudioProcessorValueTreeState &);
     ~MetroGnome2AudioProcessorEditor() override;
 
     //==============================================================================
     void paint(juce::Graphics&) override;
     void resized() override;
-
+    void sliderValueChanged(juce::Slider *) override;
 
     std::vector<juce::Component*> getVisibleComps();
 
@@ -32,10 +32,12 @@ public:
 
 private:
     MetroGnome2AudioProcessor& audioProcessor;
+    juce::AudioProcessorValueTreeState& apvts;
 
     CustomSlider bpmSlider, subdivision1Slider, subdivision2Slider;
-    //juce::AudioProcessorValueTreeState::SliderAttachment bpmAttachment;// , subdivision1Attachment, subdivision2Attachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bpmAttachment, subdivision1Attachment, subdivision2Attachment;
+
+    PolyRhythmCircle prc;
 
     //CustomTextButton playButton;
     //juce::AudioProcessorValueTreeState::ButtonAttachment playAttachment;

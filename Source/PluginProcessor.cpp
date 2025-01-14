@@ -21,20 +21,19 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
                      #endif
                        )
 #endif
-{
-
-    apvts.addParameterListener("ON/OFF", parameterChangeListener.get());
-    apvts.addParameterListener("BPM", parameterChangeListener.get());
-    apvts.addParameterListener("SUBDIVISION_1", parameterChangeListener.get());
-    apvts.addParameterListener("SUBDIVISION_2", parameterChangeListener.get());
+{   
+    bpmParam = apvts.getRawParameterValue("BPM");
+    onOffParam = apvts.getRawParameterValue("ON/OFF");
+    subdivision1Param = apvts.getRawParameterValue("SUBDIVISION_1");
+    subdivision2Param = apvts.getRawParameterValue("SUBDIVISION_2");
+    apvts.addParameterListener("BPM", this);
+    apvts.addParameterListener("ON/OFF", this);
+    apvts.addParameterListener("SUBDIVISION_1", this);
+    apvts.addParameterListener("SUBDIVISION_2", this);
 }
 
 MetroGnome2AudioProcessor::~MetroGnome2AudioProcessor()
-{
-    apvts.removeParameterListener("ON/OFF", parameterChangeListener.get());
-    apvts.removeParameterListener("BPM", parameterChangeListener.get());
-    apvts.removeParameterListener("SUBDIVISION_1", parameterChangeListener.get());
-    apvts.removeParameterListener("SUBDIVISION_2", parameterChangeListener.get());
+{  
 }
 
 
@@ -45,7 +44,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MetroGnome2AudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterBool>("ON/OFF", "On/Off", false));
     layout.add(std::make_unique<juce::AudioParameterFloat>("BPM", "bpm", juce::NormalisableRange<float>(1.f, 300.f, 0.1f, 0.25f), 120.f));
     layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_1", "Subdivision 1", 1, MAX_LENGTH, 1));
-    layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_2", "Subdivision 2", 1, MAX_LENGTH, 4));
+    layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_2", "Subdivision 2", 1, MAX_LENGTH, 1));
 
     return layout;
 
@@ -94,8 +93,27 @@ void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 
 }
 
+void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID, float newValue)
+{
 
+    //if (param 1, param 2, etc)
 
+    if (parameterID == "ON/OFF") {
+        float temp = *onOffParam;
+
+    }
+    else if (parameterID == "BPM")
+    {
+    }
+    else if (parameterID == "SUBDIVSION_1")
+    {
+    }
+    else if (parameterID == "SUBDIVSION_2")
+    {
+    }
+    DBG("Parameter " << parameterID << " has changed to " << newValue);
+
+}
 
 
 
@@ -107,9 +125,7 @@ juce::AudioProcessorEditor* MetroGnome2AudioProcessor::createEditor()
 {
 
     //return GenericAudioProcessorEditor for generic sliders magically linked to APVTS (used for debugging/prototyping)
-    //return new juce::GenericAudioProcessorEditor(*this);
-
-    return new MetroGnome2AudioProcessorEditor (*this);
+    return new MetroGnome2AudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================

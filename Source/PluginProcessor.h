@@ -15,10 +15,8 @@
 //==============================================================================
 /**
 */
-class MetroGnome2AudioProcessor  : public juce::AudioProcessor
-                            #if JucePlugin_Enable_ARA
-                             , public juce::AudioProcessorARAExtension
-                            #endif
+class MetroGnome2AudioProcessor  : public juce::AudioProcessor,  juce::AudioProcessorValueTreeState::Listener
+                             
 {
 public:
     //==============================================================================
@@ -61,7 +59,14 @@ public:
 
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
-    std::unique_ptr<ParameterChangeListener> parameterChangeListener = std::make_unique<ParameterChangeListener>();
+
+    std::atomic<float>* onOffParam;
+    std::atomic<float>* subdivision1Param;
+    std::atomic<float>* subdivision2Param;
+    std::atomic<float>* bpmParam;
+    void parameterChanged(const juce::String& parameterID, float newValue) override;
+
+
 
     PolyRhythmMetronome metronome;
 

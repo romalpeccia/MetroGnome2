@@ -10,7 +10,3 @@
 
 #include "Utilities.h"
 #include "PolyRhythmMetronome.h"
-ParameterChangeListener::ParameterChangeListener()
-{
-
-}

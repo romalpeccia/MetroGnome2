@@ -4,6 +4,10 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="k4tVpK" name="MetroGnome2">
     <GROUP id="{4F7DB09B-F2C5-28FC-4BFE-EC62A53400D0}" name="Source">
+      <FILE id="PIQCon" name="PolyRhythmCircle.cpp" compile="1" resource="0"
+            file="Source/PolyRhythmCircle.cpp"/>
+      <FILE id="kjBdLF" name="PolyRhythmCircle.h" compile="0" resource="0"
+            file="Source/PolyRhythmCircle.h"/>
       <FILE id="dZVLQu" name="PolyRhythmMetronome.cpp" compile="1" resource="0"
             file="Source/PolyRhythmMetronome.cpp"/>
       <FILE id="aS1B7K" name="PolyRhythmMetronome.h" compile="0" resource="0"
@@ -18,6 +22,10 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="c17G1Q" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
+    <FILE id="sBWhlI" name="rimshot_high.wav" compile="0" resource="1"
+          file="Samples/rimshot_high.wav"/>
+    <FILE id="QXxxCR" name="rimshot_low.wav" compile="0" resource="1" file="Samples/rimshot_low.wav"/>
+    <FILE id="odKZvg" name="rimshot_sub.wav" compile="0" resource="1" file="Samples/rimshot_sub.wav"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>

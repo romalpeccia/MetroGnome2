@@ -33,7 +33,7 @@ void PolyRhythmMetronome::processBlock(juce::AudioBuffer<float>& buffer) {
 
     if (subdvisionSamplesElapsed + bufferSize >= samplesPerDivision) {
         //do something
-       // DBG("TEST");
+        //DBG("TEST");
 
     }
 }
