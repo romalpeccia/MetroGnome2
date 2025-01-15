@@ -25,9 +25,10 @@ MetroGnome2AudioProcessorEditor::MetroGnome2AudioProcessorEditor (MetroGnome2Aud
     {
         addAndMakeVisible(comp);
     }
-
+    prc.setNumSubdivisions(apvts.getRawParameterValue("SUBDIVISION_1")->load());
     setResizable(true, true);
     setSize (PLUGIN_WIDTH, PLUGIN_HEIGHT);
+    startTimer(TIMER_INTERVAL);
 }
 
 MetroGnome2AudioProcessorEditor::~MetroGnome2AudioProcessorEditor()
@@ -38,7 +39,6 @@ MetroGnome2AudioProcessorEditor::~MetroGnome2AudioProcessorEditor()
 void MetroGnome2AudioProcessorEditor::paint (juce::Graphics& g)
 {
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
 
 }
 
@@ -53,16 +53,16 @@ void MetroGnome2AudioProcessorEditor::resized()
     juce::Rectangle<int> bottomLeftBounds = bottomBounds.withTrimmedRight(bounds.getWidth() * 0.66 + margin);
     juce::Rectangle<int> bottomRightBounds = bottomBounds.withTrimmedLeft(bounds.getWidth() * 0.66 + margin);
     juce::Rectangle<int> bottomMiddleBounds = bottomBounds.withTrimmedLeft(bounds.getWidth() * 0.33 + margin).withTrimmedRight(bounds.getWidth() * 0.33 + margin);
-    juce::Rectangle<int> prcBounds = topBounds.withTrimmedLeft(bounds.getWidth() * 0.15 + margin).withTrimmedRight(bounds.getWidth() * 0.15 + margin);
+    float prcSizeFactor = 0.15;
+    juce::Rectangle<int> prcBounds = topBounds.withTrimmedLeft(bounds.getWidth() * prcSizeFactor + margin).withTrimmedRight(bounds.getWidth() * prcSizeFactor + margin);
     prc.setBounds(prcBounds);
-    bpmSlider.setBounds(bottomRightBounds);
+    bpmSlider.setBounds(bottomLeftBounds);
     subdivision1Slider.setBounds(bottomMiddleBounds);
-    subdivision2Slider.setBounds(bottomLeftBounds);
+    subdivision2Slider.setBounds(bottomRightBounds);
 }
 
 std::vector<juce::Component*> MetroGnome2AudioProcessorEditor::getVisibleComps() {
     //returns a vector of juce visible components, for easy access such as altering all components
-
     std::vector<juce::Component*> comps;
 
     comps.push_back(&bpmSlider);
@@ -74,7 +74,6 @@ std::vector<juce::Component*> MetroGnome2AudioProcessorEditor::getVisibleComps()
 
 void MetroGnome2AudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
 
-    //TODO: update polyrhythmcircle class when slider changes
     if (slider = &subdivision1Slider) {
         prc.setNumSubdivisions(subdivision1Slider.getValue());
 
@@ -84,4 +83,8 @@ void MetroGnome2AudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
 
     }
     DBG("slider changed");
+}
+
+void MetroGnome2AudioProcessorEditor::timerCallback() {
+    prc.setHandAngle(audioProcessor.metronome.beatCounter);
 }

@@ -12,11 +12,12 @@
 #include <JuceHeader.h>
 using namespace std;
 using namespace juce;
+
 const int MAX_LENGTH = 16;
-const int PLUGIN_HEIGHT = 800;
 const int PLUGIN_WIDTH = 800;
-
-
+const int PLUGIN_HEIGHT = 800;
+const int TIMER_INTERVAL = 100; //TODO, choose a better value for this
+const int BUTTON_SIZE = 30;
 
 class CustomSliderLookNFeel : public juce::LookAndFeel_V4 {
     public:
@@ -25,8 +26,11 @@ class CustomSliderLookNFeel : public juce::LookAndFeel_V4 {
         float sliderPos,
         float minSliderPos,
         float maxSliderPos,
-        const Slider::SliderStyle style, Slider& slider) override
+        const Slider::SliderStyle style,
+        Slider& slider) override
     {
+
+        //TODO: add label, remove ishorizontal calls?
             auto trackWidth = jmin(6.0f, slider.isHorizontal() ? (float)height * 0.25f : (float)width * 0.25f);
 
             Point<float> startPoint(slider.isHorizontal() ? (float)x : (float)x + (float)width * 0.5f,
@@ -60,8 +64,8 @@ class CustomSliderLookNFeel : public juce::LookAndFeel_V4 {
             g.strokePath(valueTrack, { trackWidth, PathStrokeType::curved, PathStrokeType::rounded });
 
         
-                g.setColour(slider.findColour(Slider::thumbColourId));
-                g.fillEllipse(Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre( maxPoint));
+            g.setColour(slider.findColour(Slider::thumbColourId));
+            g.fillEllipse(Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre( maxPoint));
             
         
     }

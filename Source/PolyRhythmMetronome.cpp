@@ -10,18 +10,19 @@
 
 #include "PolyRhythmMetronome.h"
 
-void PolyRhythmMetronome::resetMetronome() {
+void PolyRhythmMetronome::resetMetronome(int sampleRate, float _bpm, int _numSubdivisions) {
     //resets the class variables of the metronome, to be called when the metronome is stopped or has parameters changed
-
+    numSubdivisions = _numSubdivisions;
+    bpm = _bpm;
     samplesElapsed = 0;
-    //samplesPerDivision = calculateSamplesPerDivision(); 
+    samplesPerDivision = calculateSamplesPerDivision(sampleRate);
 }
 
-int PolyRhythmMetronome::calculateSamplesPerDivision(int sampleRate, float bpm, int numDivisions, int beatsPerBar = 4) {
+int PolyRhythmMetronome::calculateSamplesPerDivision(int sampleRate) {
     //returns the number of samples representing the amount of time taken for a subdivision of the bar
-
-    int samplesPerBar = beatsPerBar * ((60.0 / bpm) * sampleRate);
-    return samplesPerBar / numDivisions;
+    int beatsPerBar = 4;
+    int samplesPerBar = beatsPerBar * ((60.0 / bpm) * sampleRate); // TODO: beatsPerBar, samplesPerBar are not clear in what that means (per Cycle) ?
+    return samplesPerBar / numSubdivisions;
 }
 
 void PolyRhythmMetronome::processBlock(juce::AudioBuffer<float>& buffer) {
@@ -30,10 +31,10 @@ void PolyRhythmMetronome::processBlock(juce::AudioBuffer<float>& buffer) {
     int bufferSize = buffer.getNumSamples();
     samplesElapsed += bufferSize;
     int subdvisionSamplesElapsed = samplesElapsed % samplesPerDivision;
-
     if (subdvisionSamplesElapsed + bufferSize >= samplesPerDivision) {
-        //do something
-        //DBG("TEST");
-
+        beatCounter += 1;
+        if (beatCounter >= numSubdivisions) {
+            beatCounter = 0;
+        }
     }
 }

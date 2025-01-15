@@ -34,7 +34,7 @@ void PolyRhythmCircle::paint(juce::Graphics& g)
 
         float distanceOnPath = (float(i) / numSubdivisions) * circlePerimeter;
         auto point = rhythmCircle.getPointAlongPath(distanceOnPath);
-        juce::Rectangle<int> pointBounds(point.getX(), point.getY(), 22, 22); 
+        g.drawEllipse(point.getX() - buttonSize/2, point.getY() - buttonSize / 2, buttonSize, buttonSize, 3); // TODO: bounds of circle causing issues rendering buttons
         /*
         Rhythm1Buttons[i].setBounds(pointBounds);
         Rhythm1Buttons[i].setVisible(true);
@@ -49,19 +49,15 @@ void PolyRhythmCircle::paint(juce::Graphics& g)
 
     }
 
-
     //draw the clock hand
     g.setColour(handColour);
-    float angle = juce::degreesToRadians(180.f);
-    //angle = juce::degreesToRadians(360 * (float(audioProcessor.polyRhythmMetronome.getRhythm1Counter()) / float(numSubdivisions)) + 180);
     int centerX = X + diameter / 2;
-    int centerY = Y + diameter / 2; 
-    int handWidth = 2;
+    int centerY = Y + diameter / 2;
+    
     juce::Path clockHand;
     juce::Rectangle<float> handBounds(centerX , centerY, handWidth, diameter / 2);
-
     clockHand.addRoundedRectangle(handBounds, 2.f);
-    clockHand.applyTransform(juce::AffineTransform().rotation(angle, centerX, centerY));
+    clockHand.applyTransform(juce::AffineTransform().rotation(handAngle, centerX, centerY));
     g.fillPath(clockHand);
 }
 

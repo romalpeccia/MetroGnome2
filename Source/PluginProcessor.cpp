@@ -22,6 +22,7 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
                        )
 #endif
 {   
+    //TODO : set metronome values to param values
     bpmParam = apvts.getRawParameterValue("BPM");
     onOffParam = apvts.getRawParameterValue("ON/OFF");
     subdivision1Param = apvts.getRawParameterValue("SUBDIVISION_1");
@@ -42,7 +43,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MetroGnome2AudioProcessor::c
 
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
     layout.add(std::make_unique<juce::AudioParameterBool>("ON/OFF", "On/Off", false));
-    layout.add(std::make_unique<juce::AudioParameterFloat>("BPM", "bpm", juce::NormalisableRange<float>(1.f, 300.f, 0.1f, 0.25f), 120.f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("BPM", "bpm", juce::NormalisableRange<float>(1.f, 300.f, 0.1f, 0.5f), 120.f));
     layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_1", "Subdivision 1", 1, MAX_LENGTH, 1));
     layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_2", "Subdivision 2", 1, MAX_LENGTH, 1));
 
@@ -104,11 +105,14 @@ void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID
     }
     else if (parameterID == "BPM")
     {
+        //change bpm in metronome
+        metronome.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
     }
-    else if (parameterID == "SUBDIVSION_1")
+    else if (parameterID == "SUBDIVISION_1")
     {
+        metronome.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
     }
-    else if (parameterID == "SUBDIVSION_2")
+    else if (parameterID == "SUBDIVISION_2")
     {
     }
     DBG("Parameter " << parameterID << " has changed to " << newValue);
