@@ -68,7 +68,7 @@ public:
 
 
 
-    PolyRhythmMetronome metronome;
+    PolyRhythmMetronome metronome1, metronome2;
 
 private:
     //==============================================================================

@@ -39,8 +39,8 @@ private:
     CustomSlider bpmSlider, subdivision1Slider, subdivision2Slider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bpmAttachment, subdivision1Attachment, subdivision2Attachment;
 
-    PolyRhythmCircle prc{ 4, BUTTON_SIZE }; // NOTE: check syntax of this vs calling constructor function?
-
+    PolyRhythmCircle prc1{ 4, BUTTON_SIZE }; // NOTE: check syntax of this vs calling constructor function?
+    PolyRhythmCircle prc2{ 4, BUTTON_SIZE/2 };
     //CustomTextButton playButton;
     //juce::AudioProcessorValueTreeState::ButtonAttachment playAttachment;
 

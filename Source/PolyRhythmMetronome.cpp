@@ -15,6 +15,7 @@ void PolyRhythmMetronome::resetMetronome(int sampleRate, float _bpm, int _numSub
     numSubdivisions = _numSubdivisions;
     bpm = _bpm;
     samplesElapsed = 0;
+    beatCounter = 0;
     samplesPerDivision = calculateSamplesPerDivision(sampleRate);
 }
 

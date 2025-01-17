@@ -88,17 +88,18 @@ void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
     */
 
 
-    metronome.processBlock(buffer);
-
+    metronome1.processBlock(buffer);
+    metronome2.processBlock(buffer);
 
 
 }
 
 void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID, float newValue)
 {
-
+    metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
+    metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
     //if (param 1, param 2, etc)
-
+    /*
     if (parameterID == "ON/OFF") {
         float temp = *onOffParam;
 
@@ -106,15 +107,18 @@ void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID
     else if (parameterID == "BPM")
     {
         //change bpm in metronome
-        metronome.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
+        metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
+        metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
     }
     else if (parameterID == "SUBDIVISION_1")
     {
-        metronome.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
+        metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
     }
     else if (parameterID == "SUBDIVISION_2")
     {
+        metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
     }
+    */
     DBG("Parameter " << parameterID << " has changed to " << newValue);
 
 }

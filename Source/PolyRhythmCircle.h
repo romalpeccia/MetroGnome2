@@ -25,13 +25,13 @@ class PolyRhythmCircle : public juce::Component {
         void resized() override;  
         void setNumSubdivisions(int num) {
             numSubdivisions = num;
+            DBG(numSubdivisions);
             repaint();
         }
         void setHandAngle(int currentSubdivision) {
             
             handAngle = juce::degreesToRadians(360.f * (float(currentSubdivision) / float(numSubdivisions)) + 180.f);
             repaint();
-            DBG(handAngle);
         }
 
         juce::Colour circleColour = juce::Colours::red;
