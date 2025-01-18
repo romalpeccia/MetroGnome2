@@ -34,7 +34,7 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
     juce::MemoryInputStream* inputStream = new juce::MemoryInputStream(BinaryData::drum_low_wav, BinaryData::drum_low_wavSize, false);
     juce::WavAudioFormat wavFormat;
     juce::AudioFormatReader* formatReader = wavFormat.createReaderFor(inputStream, false);
-    drumLowSample.reset(new juce::AudioFormatReaderSource(formatReader, true));
+    drumMidSample.reset(new juce::AudioFormatReaderSource(formatReader, true));
 
     juce::MemoryInputStream* inputStream2 = new juce::MemoryInputStream(BinaryData::drum_high_wav, BinaryData::drum_high_wavSize, false);
     juce::WavAudioFormat wavFormat2;
@@ -44,7 +44,7 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
     juce::MemoryInputStream* inputStream3 = new juce::MemoryInputStream(BinaryData::drum_sub_wav, BinaryData::drum_sub_wavSize, false);
     juce::WavAudioFormat wavFormat3;
     juce::AudioFormatReader* formatReader3 = wavFormat3.createReaderFor(inputStream3, false);
-    drumSubSample.reset(new juce::AudioFormatReaderSource(formatReader3, true));
+    drumMidSample.reset(new juce::AudioFormatReaderSource(formatReader3, true));
 }
 
 MetroGnome2AudioProcessor::~MetroGnome2AudioProcessor()
@@ -69,54 +69,64 @@ void MetroGnome2AudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+
+    if (drumMidSample != nullptr)
+    {
+        drumMidSample->prepareToPlay(samplesPerBlock, sampleRate);
+    }
+    if (drumHighSample != nullptr)
+    {
+        drumHighSample->prepareToPlay(samplesPerBlock, sampleRate);
+    }
+    if (drumMidSample != nullptr)
+    {
+        drumMidSample->prepareToPlay(samplesPerBlock, sampleRate);
+    }
 }
 
 void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    /*
-    juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
-
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
-
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer(channel);
-
-        // ..do something to the data...
-    }
-    */
 
     metronome1.processBlock(buffer);
     metronome2.processBlock(buffer);
-    
-    if (metronome1.beatCounter != beatCounter1)
-    {
+   
+    if (metronome1.beatCounter != beatCounter1 && metronome2.beatCounter != beatCounter2) {
+        addAudioToBuffer(buffer, *drumMidSample, metronome1);
         beatCounter1 = metronome1.beatCounter;
         sendActionMessage("beatCounter1");
-        //figure out where in buffer the samples need to go
-//
-    }
-    if (metronome2.beatCounter != beatCounter2)
-    {
         beatCounter2 = metronome2.beatCounter;
         sendActionMessage("beatCounter2");
     }
+    else if (metronome1.beatCounter != beatCounter1) {
+        addAudioToBuffer(buffer, *drumHighSample, metronome1);
+        beatCounter1 = metronome1.beatCounter;
+        sendActionMessage("beatCounter1");
+    }
+    else if (metronome2.beatCounter != beatCounter2) {
+        addAudioToBuffer(buffer, *drumMidSample, metronome2);
+        beatCounter2 = metronome2.beatCounter;
+        sendActionMessage("beatCounter2");
+    }
+}
 
+void MetroGnome2AudioProcessor::addAudioToBuffer(juce::AudioBuffer<float>& buffer, juce::AudioFormatReaderSource& sample, PolyRhythmMetronome metronome)
+{
+    if (&sample != nullptr)
+    {
+        sample.setNextReadPosition(0);
+        juce::AudioSourceChannelInfo audiosourcechannelinfo = juce::AudioSourceChannelInfo(buffer);
+        int bufferSize = buffer.getNumSamples();
+        int timeToStartPlaying = int(metronome.samplesPerDivision - metronome.samplesElapsed % metronome.samplesPerDivision);
+
+        for (int samplenum = 0; samplenum < bufferSize + 1; samplenum++) //TODO : I have no idea what this loop does or how it is affecting the getNextAudioBlock call in any way but it does something
+        {
+            if (samplenum == timeToStartPlaying)
+            {
+                sample.getNextAudioBlock(audiosourcechannelinfo);
+                break;
+            }
+        }
+    }
 }
 
 void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID, float newValue)
@@ -124,7 +134,6 @@ void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID
     metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
     metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
     DBG("Parameter " << parameterID << " has changed to " << newValue);
-
 }
 
 
@@ -135,7 +144,6 @@ void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID
 
 juce::AudioProcessorEditor* MetroGnome2AudioProcessor::createEditor()
 {
-
     //return GenericAudioProcessorEditor for generic sliders magically linked to APVTS (used for debugging/prototyping)
     return new MetroGnome2AudioProcessorEditor (*this, apvts);
 }

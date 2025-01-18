@@ -70,6 +70,7 @@ public:
 
     PolyRhythmMetronome metronome1, metronome2;
 
+    void addAudioToBuffer(juce::AudioBuffer<float>& buffer, juce::AudioFormatReaderSource& sample, PolyRhythmMetronome metronome);
     std::unique_ptr <juce::AudioFormatReaderSource> drumHighSample = nullptr;
     std::unique_ptr <juce::AudioFormatReaderSource> drumLowSample = nullptr;
     std::unique_ptr <juce::AudioFormatReaderSource> drumSubSample = nullptr;
