@@ -22,10 +22,9 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="c17G1Q" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
-    <FILE id="sBWhlI" name="rimshot_high.wav" compile="0" resource="1"
-          file="Samples/rimshot_high.wav"/>
-    <FILE id="QXxxCR" name="rimshot_low.wav" compile="0" resource="1" file="Samples/rimshot_low.wav"/>
-    <FILE id="odKZvg" name="rimshot_sub.wav" compile="0" resource="1" file="Samples/rimshot_sub.wav"/>
+    <FILE id="NARCTA" name="drum_low.wav" compile="0" resource="1" file="Samples/drum_low.wav"/>
+    <FILE id="tpUAQT" name="drum_sub.wav" compile="0" resource="1" file="Samples/drum_sub.wav"/>
+    <FILE id="C5LaXb" name="drum_high.wav" compile="0" resource="1" file="Samples/drum_high.wav"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>

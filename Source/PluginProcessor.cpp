@@ -22,7 +22,6 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
                        )
 #endif
 {   
-    //TODO : set metronome values to param values
     bpmParam = apvts.getRawParameterValue("BPM");
     onOffParam = apvts.getRawParameterValue("ON/OFF");
     subdivision1Param = apvts.getRawParameterValue("SUBDIVISION_1");
@@ -31,6 +30,21 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
     apvts.addParameterListener("ON/OFF", this);
     apvts.addParameterListener("SUBDIVISION_1", this);
     apvts.addParameterListener("SUBDIVISION_2", this);
+
+    juce::MemoryInputStream* inputStream = new juce::MemoryInputStream(BinaryData::drum_low_wav, BinaryData::drum_low_wavSize, false);
+    juce::WavAudioFormat wavFormat;
+    juce::AudioFormatReader* formatReader = wavFormat.createReaderFor(inputStream, false);
+    drumLowSample.reset(new juce::AudioFormatReaderSource(formatReader, true));
+
+    juce::MemoryInputStream* inputStream2 = new juce::MemoryInputStream(BinaryData::drum_high_wav, BinaryData::drum_high_wavSize, false);
+    juce::WavAudioFormat wavFormat2;
+    juce::AudioFormatReader* formatReader2 = wavFormat2.createReaderFor(inputStream2, false);
+    drumHighSample.reset(new juce::AudioFormatReaderSource(formatReader2, true));
+
+    juce::MemoryInputStream* inputStream3 = new juce::MemoryInputStream(BinaryData::drum_sub_wav, BinaryData::drum_sub_wavSize, false);
+    juce::WavAudioFormat wavFormat3;
+    juce::AudioFormatReader* formatReader3 = wavFormat3.createReaderFor(inputStream3, false);
+    drumSubSample.reset(new juce::AudioFormatReaderSource(formatReader3, true));
 }
 
 MetroGnome2AudioProcessor::~MetroGnome2AudioProcessor()
@@ -87,10 +101,21 @@ void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
     }
     */
 
-
     metronome1.processBlock(buffer);
     metronome2.processBlock(buffer);
-
+    
+    if (metronome1.beatCounter != beatCounter1)
+    {
+        beatCounter1 = metronome1.beatCounter;
+        sendActionMessage("beatCounter1");
+        //figure out where in buffer the samples need to go
+//
+    }
+    if (metronome2.beatCounter != beatCounter2)
+    {
+        beatCounter2 = metronome2.beatCounter;
+        sendActionMessage("beatCounter2");
+    }
 
 }
 
@@ -98,27 +123,6 @@ void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID
 {
     metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
     metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
-    //if (param 1, param 2, etc)
-    /*
-    if (parameterID == "ON/OFF") {
-        float temp = *onOffParam;
-
-    }
-    else if (parameterID == "BPM")
-    {
-        //change bpm in metronome
-        metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
-        metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
-    }
-    else if (parameterID == "SUBDIVISION_1")
-    {
-        metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
-    }
-    else if (parameterID == "SUBDIVISION_2")
-    {
-        metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
-    }
-    */
     DBG("Parameter " << parameterID << " has changed to " << newValue);
 
 }

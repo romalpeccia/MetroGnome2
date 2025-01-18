@@ -15,9 +15,12 @@
 class PolyRhythmCircle : public juce::Component {
     public:
         PolyRhythmCircle() {};
-        PolyRhythmCircle(int _handWidth, int _buttonSize) {
+        PolyRhythmCircle(int _handWidth, int _buttonSize, juce::Colour _circleColour, juce::Colour _handColour, juce::Colour _buttonColour) {
             handWidth = _handWidth;
             buttonSize = _buttonSize;
+            circleColour = _circleColour;
+            handColour = _handColour;
+            buttonColour = _buttonColour;
         };
         ~PolyRhythmCircle(){};
 
@@ -34,10 +37,11 @@ class PolyRhythmCircle : public juce::Component {
             repaint();
         }
 
-        juce::Colour circleColour = juce::Colours::red;
-        juce::Colour handColour = juce::Colours::green;
+        juce::Colour circleColour;
+        juce::Colour handColour;
+        juce::Colour buttonColour;
         int numSubdivisions; // temporary value, should be set by slider
         int handWidth;
         float handAngle = juce::degreesToRadians(180.f);
-        int buttonSize; // should be divisible by 2 to avoid rounding issues caused by decimals
+        int buttonSize; // should be divisible by 2 to avoid rounding issues caused by decimals 
 };

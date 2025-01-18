@@ -15,8 +15,7 @@
 //==============================================================================
 /**
 */
-class MetroGnome2AudioProcessor  : public juce::AudioProcessor,  juce::AudioProcessorValueTreeState::Listener
-                             
+class MetroGnome2AudioProcessor  : public juce::AudioProcessor,  juce::AudioProcessorValueTreeState::Listener, public juce::ActionBroadcaster
 {
 public:
     //==============================================================================
@@ -66,10 +65,14 @@ public:
     std::atomic<float>* bpmParam;
     void parameterChanged(const juce::String& parameterID, float newValue) override;
 
-
+    int beatCounter1 = 0;
+    int beatCounter2 = 0;
 
     PolyRhythmMetronome metronome1, metronome2;
 
+    std::unique_ptr <juce::AudioFormatReaderSource> drumHighSample = nullptr;
+    std::unique_ptr <juce::AudioFormatReaderSource> drumLowSample = nullptr;
+    std::unique_ptr <juce::AudioFormatReaderSource> drumSubSample = nullptr;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MetroGnome2AudioProcessor)

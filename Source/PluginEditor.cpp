@@ -25,11 +25,13 @@ MetroGnome2AudioProcessorEditor::MetroGnome2AudioProcessorEditor (MetroGnome2Aud
     {
         addAndMakeVisible(comp);
     }
-    prc1.setNumSubdivisions(apvts.getRawParameterValue("SUBDIVISION_1")->load()); // TODO load the audioprocessor param?
-    prc2.setNumSubdivisions(apvts.getRawParameterValue("SUBDIVISION_2")->load()); // TODO load the audioprocessor param?
+   
+    prc1.setNumSubdivisions(*audioProcessor.subdivision1Param);
+    prc2.setNumSubdivisions(*audioProcessor.subdivision2Param); 
+    audioProcessor.addActionListener(this);
     setResizable(true, true);
     setSize (PLUGIN_WIDTH, PLUGIN_HEIGHT);
-    startTimer(TIMER_INTERVAL);
+    //startTimer(TIMER_INTERVAL);
 }
 
 MetroGnome2AudioProcessorEditor::~MetroGnome2AudioProcessorEditor()
@@ -56,12 +58,9 @@ void MetroGnome2AudioProcessorEditor::resized()
     juce::Rectangle<int> bottomMiddleBounds = bottomBounds.withTrimmedLeft(bounds.getWidth() * 0.33 + margin).withTrimmedRight(bounds.getWidth() * 0.33 + margin);
     float prc1SizeFactor = 0.15;
     juce::Rectangle<int> prc1Bounds = topBounds.withTrimmedLeft(bounds.getWidth() * prc1SizeFactor + margin).withTrimmedRight(bounds.getWidth() * prc1SizeFactor + margin);
+    float prc2SizeFactor = 0.3;
     prc1.setBounds(prc1Bounds);
-    float prc2SizeFactor = 0.90;
-    int prc2Width = prc1Bounds.getWidth() * prc2SizeFactor / 2;
-    int prc2Height = prc1Bounds.getHeight() * prc2SizeFactor / 2;
-    juce::Rectangle<int> prc2Bounds(prc1Bounds.getCentreX() - prc2Width/2 - margin - 3, prc1Bounds.getCentreY() - prc2Height/2, prc2Width, prc2Height ); //TODO this is sus
-    prc2.setBounds(prc2Bounds);
+    prc2.setBounds(prc1Bounds.reduced(prc1Bounds.getWidth()*prc2SizeFactor / 2)); 
     bpmSlider.setBounds(bottomLeftBounds);
     subdivision1Slider.setBounds(bottomMiddleBounds);
     subdivision2Slider.setBounds(bottomRightBounds);
@@ -92,7 +91,18 @@ void MetroGnome2AudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
   
 }
 
+/*
 void MetroGnome2AudioProcessorEditor::timerCallback() {
     prc1.setHandAngle(audioProcessor.metronome1.beatCounter);
     prc2.setHandAngle(audioProcessor.metronome2.beatCounter);
+}
+*/
+void MetroGnome2AudioProcessorEditor::actionListenerCallback(const juce::String& message) {
+
+    if (message == "beatCounter1") {
+       prc1.setHandAngle(audioProcessor.metronome1.beatCounter);
+   }
+    if (message == "beatCounter2") {
+       prc2.setHandAngle(audioProcessor.metronome2.beatCounter);
+    }
 }

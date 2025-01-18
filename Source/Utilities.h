@@ -18,7 +18,10 @@ const int PLUGIN_WIDTH = 800;
 const int PLUGIN_HEIGHT = 800;
 const int TIMER_INTERVAL = 100; //TODO, choose a better value for this
 const int BUTTON_SIZE = 30;
-
+const juce::Colour MAIN_COLOUR = juce::Colours::rebeccapurple;
+const juce::Colour SECONDARY_COLOUR = juce::Colours::steelblue;
+const juce::Colour BUTTON_COLOUR_1 = juce::Colours::orange;
+const juce::Colour BUTTON_COLOUR_2 = juce::Colours::mediumvioletred;
 class CustomSliderLookNFeel : public juce::LookAndFeel_V4 {
     public:
     
