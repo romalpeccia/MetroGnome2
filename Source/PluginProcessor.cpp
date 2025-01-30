@@ -44,7 +44,7 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
     juce::MemoryInputStream* inputStream3 = new juce::MemoryInputStream(BinaryData::drum_sub_wav, BinaryData::drum_sub_wavSize, false);
     juce::WavAudioFormat wavFormat3;
     juce::AudioFormatReader* formatReader3 = wavFormat3.createReaderFor(inputStream3, false);
-    drumMidSample.reset(new juce::AudioFormatReaderSource(formatReader3, true));
+    drumLowSample.reset(new juce::AudioFormatReaderSource(formatReader3, true));
 }
 
 MetroGnome2AudioProcessor::~MetroGnome2AudioProcessor()
@@ -61,6 +61,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout MetroGnome2AudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_1", "Subdivision 1", 1, MAX_LENGTH, 1));
     layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_2", "Subdivision 2", 1, MAX_LENGTH, 1));
 
+
+    for (int i = 0; i < MAX_LENGTH; i++) {
+        layout.add(std::make_unique<juce::AudioParameterBool>("CIRCLE_1_BEAT_" + to_string(i), "Circle 1 Beat " + to_string(i), true));
+        layout.add(std::make_unique<juce::AudioParameterBool>("CIRCLE_2_BEAT_" + to_string(i), "Circle 2 Beat " + to_string(i), true));
+    }
     return layout;
 
 }
@@ -78,9 +83,9 @@ void MetroGnome2AudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
     {
         drumHighSample->prepareToPlay(samplesPerBlock, sampleRate);
     }
-    if (drumMidSample != nullptr)
+    if (drumLowSample != nullptr)
     {
-        drumMidSample->prepareToPlay(samplesPerBlock, sampleRate);
+        drumLowSample->prepareToPlay(samplesPerBlock, sampleRate);
     }
 }
 
@@ -89,22 +94,30 @@ void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
 
     metronome1.processBlock(buffer);
     metronome2.processBlock(buffer);
-   
-    if (metronome1.beatCounter != beatCounter1 && metronome2.beatCounter != beatCounter2) {
-        addAudioToBuffer(buffer, *drumMidSample, metronome1);
+    if (metronome1.beatCounter != beatCounter1 && metronome2.beatCounter != beatCounter2 ) {
+
         beatCounter1 = metronome1.beatCounter;
-        sendActionMessage("beatCounter1");
         beatCounter2 = metronome2.beatCounter;
+        if (apvts.getRawParameterValue("CIRCLE_1_BEAT_" + to_string(beatCounter1))->load() == true && apvts.getRawParameterValue("CIRCLE_2_BEAT_" + to_string(beatCounter2))->load() == true) { //TODO: use params instead of loading like this
+            addAudioToBuffer(buffer, *drumLowSample, metronome1);
+        }
+        sendActionMessage("beatCounter1");
         sendActionMessage("beatCounter2");
     }
     else if (metronome1.beatCounter != beatCounter1) {
-        addAudioToBuffer(buffer, *drumHighSample, metronome1);
+
         beatCounter1 = metronome1.beatCounter;
+        if (apvts.getRawParameterValue("CIRCLE_1_BEAT_" + to_string(beatCounter1))->load() == true) {
+            addAudioToBuffer(buffer, *drumMidSample, metronome1);
+        }
         sendActionMessage("beatCounter1");
     }
     else if (metronome2.beatCounter != beatCounter2) {
-        addAudioToBuffer(buffer, *drumMidSample, metronome2);
+
         beatCounter2 = metronome2.beatCounter;
+        if (apvts.getRawParameterValue("CIRCLE_2_BEAT_" + to_string(beatCounter2))->load() == true) {
+            addAudioToBuffer(buffer, *drumHighSample, metronome2);
+        }
         sendActionMessage("beatCounter2");
     }
 }
@@ -114,7 +127,7 @@ void MetroGnome2AudioProcessor::addAudioToBuffer(juce::AudioBuffer<float>& buffe
     if (&sample != nullptr)
     {
         sample.setNextReadPosition(0);
-        juce::AudioSourceChannelInfo audiosourcechannelinfo = juce::AudioSourceChannelInfo(buffer);
+        juce::AudioSourceChannelInfo audioSourceChannelInfo = juce::AudioSourceChannelInfo(buffer);
         int bufferSize = buffer.getNumSamples();
         int timeToStartPlaying = int(metronome.samplesPerDivision - metronome.samplesElapsed % metronome.samplesPerDivision);
 
@@ -122,7 +135,7 @@ void MetroGnome2AudioProcessor::addAudioToBuffer(juce::AudioBuffer<float>& buffe
         {
             if (samplenum == timeToStartPlaying)
             {
-                sample.getNextAudioBlock(audiosourcechannelinfo);
+                sample.getNextAudioBlock(audioSourceChannelInfo);
                 break;
             }
         }

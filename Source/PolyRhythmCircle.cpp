@@ -28,28 +28,26 @@ void PolyRhythmCircle::paint(juce::Graphics& g)
     float circlePerimeter = rhythmCircle.getLength(); 
     for (int i = 0; i < numSubdivisions; i++)
     {
-        //iterate through beats and draw toggle button on the edge of the main circle
         float distanceOnPath = (float(i) / numSubdivisions) * circlePerimeter;
         auto point = rhythmCircle.getPointAlongPath(distanceOnPath);
-        g.drawEllipse(point.getX() - buttonSize/2, point.getY() - buttonSize / 2, buttonSize, buttonSize, 3); 
-        /*
-        Rhythm1Buttons[i].setBounds(pointBounds);
-        Rhythm1Buttons[i].setVisible(true);
-        if ((audioProcessor.apvts.getRawParameterValue("RHYTHM1." + to_string(i) + "_TOGGLE")->load() == true) && audioProcessor.polyRhythmMetronome.getRhythm1Counter() == i) {
-            Rhythm1Buttons[i].setColour(juce::ToggleButton::ColourIds::tickColourId, juce::Colours::green);
+        if (i < numSubdivisions){
+            juce::Rectangle<int> buttonBounds(point.getX() - buttonSize / 2, point.getY() - buttonSize / 2, buttonSize, buttonSize);
+            beatButtons[i].setBounds(buttonBounds);    
+        }
+    }
+    for (int i = 0; i < MAX_LENGTH; i++) { //TODO: make MAX_LENGTH a variable
+        if (i < numSubdivisions) {
+            beatButtons[i].setVisible(true);
         }
         else {
-            Rhythm1Buttons[i].setColour(juce::ToggleButton::ColourIds::tickColourId, juce::Colours::grey);
+            beatButtons[i].setVisible(false);
         }
-        */
-  
-
     }
     g.setColour(handColour);
     juce::Path clockHand;
     int centerX = X + diameter / 2;
     int centerY = Y + diameter / 2;
-    juce::Rectangle<float> handBounds(centerX , centerY, handWidth, diameter / 2);
+    juce::Rectangle<int> handBounds(centerX , centerY, handWidth, diameter / 2);
     clockHand.addRoundedRectangle(handBounds, 2.f);
     clockHand.applyTransform(juce::AffineTransform().rotation(handAngle, centerX, centerY));
     g.fillPath(clockHand);
