@@ -33,6 +33,8 @@ class PolyRhythmCircle : public juce::Component {
                 beatButtonAttachments[i] = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, _id + to_string(i), beatButtons[i]);
                 beatButtons[i].setClickingTogglesState(true);
                 addChildComponent(beatButtons[i]);
+                beatButtons[i].setColour(juce::TextButton::ColourIds::buttonColourId, BUTTON_COLOUR_OFF);
+                beatButtons[i].setColour(juce::TextButton::ColourIds::buttonOnColourId, buttonColour);
             }
         };
         ~PolyRhythmCircle(){};

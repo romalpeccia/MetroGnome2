@@ -22,6 +22,7 @@ const juce::Colour MAIN_COLOUR = juce::Colours::rebeccapurple;
 const juce::Colour SECONDARY_COLOUR = juce::Colours::steelblue;
 const juce::Colour BUTTON_COLOUR_1 = juce::Colours::orange;
 const juce::Colour BUTTON_COLOUR_2 = juce::Colours::mediumvioletred;
+const juce::Colour BUTTON_COLOUR_OFF = juce::Colours::darkslategrey;
 class CustomLookAndFeel : public juce::LookAndFeel_V4 {
     public:
     
@@ -104,8 +105,10 @@ class CustomTextButton : public juce::TextButton {
         CustomTextButton() {
             setLookAndFeel(&lnf);
         };
-        CustomTextButton(const juce::String &buttonName) {
+        CustomTextButton(const juce::String &buttonName, const juce::Colour buttonColour) {
             setLookAndFeel(&lnf);
+            setColour(juce::TextButton::ColourIds::buttonOnColourId, buttonColour);
+            setColour(juce::TextButton::ColourIds::buttonColourId, BUTTON_COLOUR_OFF);
             setButtonText(buttonName);
         };
         ~CustomTextButton(){
