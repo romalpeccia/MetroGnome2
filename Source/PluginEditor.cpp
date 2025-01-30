@@ -21,6 +21,10 @@ MetroGnome2AudioProcessorEditor::MetroGnome2AudioProcessorEditor (MetroGnome2Aud
     subdivision1Slider.addListener(this);
     subdivision2Slider.addListener(this);
 
+    playAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, "PLAY", playButton);
+    playButton.setClickingTogglesState(true);
+    //playButton.addListener(this); //TODO: why doesn't this work? janky fix: just check PLAY in processor
+
     for (auto* comp : getVisibleComps())
     {
         addAndMakeVisible(comp);
@@ -64,12 +68,15 @@ void MetroGnome2AudioProcessorEditor::resized()
     bpmSlider.setBounds(bottomLeftBounds);
     subdivision1Slider.setBounds(bottomMiddleBounds);
     subdivision2Slider.setBounds(bottomRightBounds);
+
+    playButton.setBounds(topBounds.withTrimmedBottom(topBounds.getHeight() * 0.9).withTrimmedRight(topBounds.getWidth() * 0.9));
 }
 
 std::vector<juce::Component*> MetroGnome2AudioProcessorEditor::getVisibleComps() {
     //returns a vector of juce visible components, for easy access such as altering all components
     std::vector<juce::Component*> comps;
 
+    comps.push_back(&playButton);
     comps.push_back(&bpmSlider);
     comps.push_back(&subdivision1Slider);
     comps.push_back(&subdivision2Slider);
@@ -84,8 +91,6 @@ void MetroGnome2AudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
         prc1.setNumSubdivisions(subdivision1Slider.getValue());
     }
     if (slider = &subdivision2Slider) {
-
-        DBG("slider changed");
         prc2.setNumSubdivisions(subdivision2Slider.getValue());
     }
   

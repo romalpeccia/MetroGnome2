@@ -59,7 +59,7 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
-    std::atomic<float>* onOffParam;
+    std::atomic<float>* playParam;
     std::atomic<float>* subdivision1Param;
     std::atomic<float>* subdivision2Param;
     std::atomic<float>* bpmParam;

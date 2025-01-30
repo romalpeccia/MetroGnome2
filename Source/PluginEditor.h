@@ -41,8 +41,8 @@ private:
 
     PolyRhythmCircle prc1{apvts, "CIRCLE_1_BEAT_", 4, BUTTON_SIZE, MAIN_COLOUR, SECONDARY_COLOUR , BUTTON_COLOUR_1}; // NOTE: check syntax of this vs calling constructor function?
     PolyRhythmCircle prc2{ apvts, "CIRCLE_2_BEAT_", 4, BUTTON_SIZE/2, SECONDARY_COLOUR, MAIN_COLOUR, BUTTON_COLOUR_2 };
-    //CustomTextButton playButton;
-    //juce::AudioProcessorValueTreeState::ButtonAttachment playAttachment;
+    CustomTextButton playButton{ "PLAY" };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> playAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MetroGnome2AudioProcessorEditor)
 };
