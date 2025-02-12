@@ -16,13 +16,14 @@ using namespace juce;
 const int MAX_LENGTH = 16;
 const int PLUGIN_WIDTH = 800;
 const int PLUGIN_HEIGHT = 800;
-const int TIMER_INTERVAL = 100; //TODO, choose a better value for this
+//const int TIMER_INTERVAL = 100; //TODO, choose a better value for this
 const int BUTTON_SIZE = 30;
-const juce::Colour MAIN_COLOUR = juce::Colours::rebeccapurple;
-const juce::Colour SECONDARY_COLOUR = juce::Colours::steelblue;
+const juce::Colour MAIN_COLOUR = juce::Colours::mediumpurple;
+const juce::Colour SECONDARY_COLOUR = juce::Colours::deepskyblue;
 const juce::Colour BUTTON_COLOUR_1 = juce::Colours::orange;
-const juce::Colour BUTTON_COLOUR_2 = juce::Colours::mediumvioletred;
-const juce::Colour BUTTON_COLOUR_OFF = juce::Colours::darkslategrey;
+const juce::Colour BUTTON_COLOUR_2 = juce::Colours::hotpink;
+const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
+
 class CustomLookAndFeel : public juce::LookAndFeel_V4 {
     public:
     
@@ -86,11 +87,22 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4 {
                 leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
                 Justification::centred, 2);
     }
+
 };
 
 class CustomSlider : public juce::Slider {
     public:
         CustomSlider() {
+            setColour(juce::Slider::ColourIds::backgroundColourId, COMPONENT_COLOUR_OFF);
+            setLookAndFeel(&lnf); 
+        };
+        CustomSlider(const juce::Colour mainColour, const juce::Colour secondaryColour) {
+            setColour(juce::Slider::ColourIds::textBoxOutlineColourId, mainColour);
+            setColour(juce::Slider::ColourIds::textBoxTextColourId, secondaryColour.brighter(0.5f));
+            setColour(juce::Slider::ColourIds::textBoxBackgroundColourId, mainColour.darker(0.5f));
+            setColour(juce::Slider::ColourIds::trackColourId, mainColour);
+            setColour(juce::Slider::ColourIds::thumbColourId, secondaryColour);
+            setColour(juce::Slider::ColourIds::backgroundColourId, COMPONENT_COLOUR_OFF);
             setLookAndFeel(&lnf);
         };
         ~CustomSlider() {
@@ -98,7 +110,13 @@ class CustomSlider : public juce::Slider {
         };
     private:
         CustomLookAndFeel lnf;
+        //juce::Label label;
+
+        //override resized function?
+        //or do something within LNF
+        //or lazy approach - just declare labels in the editor?
 };
+
 
 class CustomTextButton : public juce::TextButton {
     public:
@@ -108,7 +126,7 @@ class CustomTextButton : public juce::TextButton {
         CustomTextButton(const juce::String &buttonName, const juce::Colour buttonColour) {
             setLookAndFeel(&lnf);
             setColour(juce::TextButton::ColourIds::buttonOnColourId, buttonColour);
-            setColour(juce::TextButton::ColourIds::buttonColourId, BUTTON_COLOUR_OFF);
+            setColour(juce::TextButton::ColourIds::buttonColourId, COMPONENT_COLOUR_OFF);
             setButtonText(buttonName);
         };
         ~CustomTextButton(){

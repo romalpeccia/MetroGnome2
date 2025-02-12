@@ -65,10 +65,12 @@ public:
     std::atomic<float>* bpmParam;
     void parameterChanged(const juce::String& parameterID, float newValue) override;
 
-    int beatCounter1 = 0;
+    PolyRhythmMetronome metronome1, metronome2;
+    //cache the beatCounters from the metronomes so we can keep track of when they change (alternatively, create another type of listener for that?)
+    int beatCounter1 = 0; 
     int beatCounter2 = 0;
 
-    PolyRhythmMetronome metronome1, metronome2;
+    
 
     void addAudioToBuffer(juce::AudioBuffer<float>& buffer, juce::AudioFormatReaderSource& sample, PolyRhythmMetronome metronome);
     std::unique_ptr <juce::AudioFormatReaderSource> drumHighSample = nullptr;
