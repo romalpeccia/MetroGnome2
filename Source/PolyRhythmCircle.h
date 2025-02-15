@@ -72,7 +72,7 @@ class PolyRhythmCircle : public juce::Component, public juce::Button::Listener {
         int numSubdivisions = 4; 
         int handWidth;
         float handAngle = juce::degreesToRadians(180.f);
-        int buttonSize = 4; //should be divisible by 2 to avoid rounding issues caused by decimals 
+        int buttonSize = 4; //length/width of the buttons, should be divisible by 2 to avoid rounding issues caused by decimals 
 
         juce::AudioProcessorValueTreeState& apvts;
         juce::String id;// string associated with the apvts parameters for the beatButtons

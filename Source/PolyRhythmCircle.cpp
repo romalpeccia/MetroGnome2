@@ -15,7 +15,7 @@
 
 void PolyRhythmCircle::paint(juce::Graphics& g)
 {
-    auto bounds = getLocalBounds().reduced(buttonSize);
+    auto bounds = getLocalBounds().reduced(buttonSize/2);
     int width = bounds.getWidth();
     int height = bounds.getHeight();
     int diameter = ((width > height) ? height : width) ; //take the lesser of height and width of the bounds to be our circle diameter
