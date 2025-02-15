@@ -24,20 +24,33 @@ void PolyRhythmCircle::paint(juce::Graphics& g)
 
     juce::Path rhythmCircle;
     rhythmCircle.addEllipse(X , Y, diameter, diameter);
+    float circlePerimeter = rhythmCircle.getLength();
     g.setColour(circleColour);
-    g.strokePath(rhythmCircle, juce::PathStrokeType(2.0f));
+
+    if (numSubdivisions > 3){
+        for (int i = 0; i <= numSubdivisions - 1; i++) {
+            float startPointOnPath = (float(i) / numSubdivisions) * circlePerimeter;
+            float endPointOnPath = (float(i + 1) / numSubdivisions) * circlePerimeter;
+            auto startPoint = rhythmCircle.getPointAlongPath(startPointOnPath);
+            auto endPoint = rhythmCircle.getPointAlongPath(endPointOnPath);
+            juce::Line<float> line(startPoint, endPoint);
+            g.drawLine(line, 2.0f);
+        }
+    }
+    else {
+        g.strokePath(rhythmCircle, juce::PathStrokeType(2.0f));
+    }
 
     g.setColour(buttonColour);
-    float circlePerimeter = rhythmCircle.getLength(); 
+    
     for (int i = 0; i < numSubdivisions; i++)
     {
         float distanceOnPath = (float(i) / numSubdivisions) * circlePerimeter;
-        auto point = rhythmCircle.getPointAlongPath(distanceOnPath);
-        if (i < numSubdivisions){
-            juce::Rectangle<int> buttonBounds(point.getX() - buttonSize / 2, point.getY() - buttonSize / 2, buttonSize, buttonSize);
-            beatButtons[i].setBounds(buttonBounds);    
-        }
+        juce::Point point = rhythmCircle.getPointAlongPath(distanceOnPath);
+        juce::Rectangle<int> buttonBounds(point.getX() - buttonSize / 2, point.getY() - buttonSize / 2, buttonSize, buttonSize);
+        beatButtons[i].setBounds(buttonBounds);    
     }
+    
     for (int i = 0; i < MAX_LENGTH; i++) {
         if (i < numSubdivisions) {
             beatButtons[i].setVisible(true);
@@ -46,6 +59,7 @@ void PolyRhythmCircle::paint(juce::Graphics& g)
             beatButtons[i].setVisible(false);
         }
     }
+    
     g.setColour(handColour);
     juce::Path clockHand;
     int centerX = X + diameter / 2;

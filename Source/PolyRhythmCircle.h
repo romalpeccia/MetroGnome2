@@ -54,6 +54,7 @@ class PolyRhythmCircle : public juce::Component, public juce::Button::Listener {
             repaint();
         }
         void setHandAngle(int currentSubdivision) {
+            //set hand angle based on a specific subdivsiion of the circle
             handAngle = juce::degreesToRadians(360.f * (float(currentSubdivision) / float(numSubdivisions)) + 180.f);
             repaint();
         }

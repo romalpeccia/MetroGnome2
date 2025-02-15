@@ -13,7 +13,7 @@
 using namespace std;
 using namespace juce;
 
-const int MAX_LENGTH = 16;
+const int MAX_LENGTH = 32;
 const int PLUGIN_WIDTH = 800;
 const int PLUGIN_HEIGHT = 800;
 //const int TIMER_INTERVAL = 100; //TODO, choose a better value for this
