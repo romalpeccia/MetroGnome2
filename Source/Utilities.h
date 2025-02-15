@@ -13,10 +13,10 @@
 using namespace std;
 using namespace juce;
 
-const int MAX_LENGTH = 32;
+const int MAX_LENGTH = 16;
 const int PLUGIN_WIDTH = 800;
 const int PLUGIN_HEIGHT = 800;
-//const int TIMER_INTERVAL = 100; //TODO, choose a better value for this
+const int TIMER_INTERVAL = 60; 
 const int BUTTON_SIZE = 30;
 const juce::Colour MAIN_COLOUR = juce::Colours::mediumpurple;
 const juce::Colour SECONDARY_COLOUR = juce::Colours::deepskyblue;
@@ -29,6 +29,7 @@ const juce::String SUBDIVISION_1_STRING = "SUBDIVISION_1";
 const juce::String SUBDIVISION_2_STRING = "SUBDIVISION_2";
 const juce::String CIRCLE_1_BEAT_STRING = "CIRCLE_1_BEAT_";
 const juce::String CIRCLE_2_BEAT_STRING = "CIRCLE_2_BEAT_";
+
 class CustomLookAndFeel : public juce::LookAndFeel_V4 {
     public:
     
@@ -39,8 +40,6 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4 {
         const Slider::SliderStyle style,
         Slider& slider) override
     {
-        //draws a horizontal slider
-        
         //g.fillRect(x, y, width, height); //for debugging
         auto trackWidth = jmin(6.0f,  (float)height * 0.25f);
 

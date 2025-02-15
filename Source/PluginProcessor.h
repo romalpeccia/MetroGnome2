@@ -63,17 +63,15 @@ public:
     std::atomic<float>* subdivision1Param;
     std::atomic<float>* subdivision2Param;
     std::atomic<float>* bpmParam;
-    std::atomic<float>* beatButtonParams1[MAX_LENGTH]; //TODO: tried initializing these in the polyrhythm circle class at first but it didn't make sense because it was part of the editor and the processor doesnt have acess to it ?
+    std::atomic<float>* beatButtonParams1[MAX_LENGTH]; 
     std::atomic<float>* beatButtonParams2[MAX_LENGTH];
 
     void parameterChanged(const juce::String& parameterID, float newValue) override;
 
     PolyRhythmMetronome metronome1, metronome2;
-    //cache the beatCounters from the metronomes so we can keep track of when they change TODO: (alternatively, create another type of listener for that within metronome??)
-    int beatCounter1 = 0; 
-    int beatCounter2 = 0;
-
-    
+    //cache the beatCounters from the metronomes so we can keep track of when they change
+    int subdivisionCounter1 = 0; 
+    int subdivisionCounter2 = 0;
 
     void addAudioToBuffer(juce::AudioBuffer<float>& buffer, juce::AudioFormatReaderSource& sample, PolyRhythmMetronome metronome);
     std::unique_ptr <juce::AudioFormatReaderSource> drumHighSample = nullptr;

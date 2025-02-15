@@ -19,15 +19,41 @@ class PolyRhythmMetronome  {
 
     
         void processBlock(juce::AudioBuffer<float>& buffer);
-        void resetMetronome(int sampleRate, float bpm, int numDivisions); 
-        int calculateSamplesPerDivision(int sampleRate);
+        void resetMetronome(int sampleRate, float bpm, int _numSubdivisions); 
+        int calculateSamplesPerSubdivision(int sampleRate, int beatsPerBar = 4); //
 
+
+        void setBpm(float _bpm) {
+            if (bpm <= 0) {
+                throw std::invalid_argument("received invalid value");
+            }
+            bpm = _bpm;
+        }
+        float getBpm() { return bpm; }
+
+        void setNumSubdivisions(int _numSubdivisions) { 
+            if (numSubdivisions < 1) {
+                throw std::invalid_argument("received invalid value");
+            }
+            numSubdivisions = _numSubdivisions;
+        }
+        int getNumSubdivisions() { return numSubdivisions; }
+
+        //void setTotalSamplesSinceReset(int _totalSamplesSinceReset) { totalSamplesSinceReset = _totalSamplesSinceReset; }
+        int getTotalSamplesSinceReset() { return totalSamplesSinceReset; }
+
+        void setSamplesPerSubdivision(int _samplesPerSubdivision) { samplesPerSubdivision = _samplesPerSubdivision; }
+        int getSamplesPerSubdivision() { return samplesPerSubdivision; }
+
+        void setSubdivisionCounter(int _subdivisionCounter) { subdivisionCounter = _subdivisionCounter; }
+        int getSubdivisionCounter() { return subdivisionCounter; }
+
+
+
+    private:
         float bpm = 120;
         int numSubdivisions = 4; //number of subdivisions the cycle is being split into
-        int samplesElapsed = 0; //number of samples elapsed since the PolyRhythmMachine started
-        int samplesPerDivision; //number of samples representating the time taken to complete one subdivision
-        int beatCounter = 0; //counts which beat of the sequence has most recently played
-    private:
-
-
+        int totalSamplesSinceReset = 0; //number of samples elapsed since the PolyRhythmMachine started
+        int samplesPerSubdivision; //number of samples representating the time taken to complete one subdivision
+        int subdivisionCounter = 0; //counts which beat of the sequence has most recently played
 };

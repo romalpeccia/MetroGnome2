@@ -21,7 +21,7 @@ MetroGnome2AudioProcessorEditor::MetroGnome2AudioProcessorEditor (MetroGnome2Aud
 
     playAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, PLAY_STRING, playButton);
     playButton.setClickingTogglesState(true);
-    //playButton.addListener(this); //TODO: why doesn't this work like it does with the sliders? janky fix: just check PLAY in processor 
+    //playButton.addListener(this); //TODO: why doesn't this work like it does with the sliders? janky fix: just checkplayParam in processor 
       
     for (auto* comp : getVisibleComps())
     {
@@ -29,11 +29,11 @@ MetroGnome2AudioProcessorEditor::MetroGnome2AudioProcessorEditor (MetroGnome2Aud
     }
 
     prc1.setNumSubdivisions(*audioProcessor.subdivision1Param);
-    prc2.setNumSubdivisions(*audioProcessor.subdivision2Param); 
+    prc2.setNumSubdivisions(*audioProcessor.subdivision2Param);
     audioProcessor.addActionListener(this);
     setResizable(true, true);
     setSize (PLUGIN_WIDTH, PLUGIN_HEIGHT);
-    //startTimer(TIMER_INTERVAL);
+    startTimer(TIMER_INTERVAL);
 }
 
 MetroGnome2AudioProcessorEditor::~MetroGnome2AudioProcessorEditor()
@@ -96,18 +96,19 @@ void MetroGnome2AudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
   
 }
 
-/*
 void MetroGnome2AudioProcessorEditor::timerCallback() {
-    prc1.setHandAngle(audioProcessor.metronome1.beatCounter);
-    prc2.setHandAngle(audioProcessor.metronome2.beatCounter);
+    //callback for finer precision of handAngle
+    //prc1.setHandAngleByFraction( ((float(audioProcessor.metronome1.totalSamplesSinceReset) / float(audioProcessor.metronome1.samplesPerSubdivision))) / float(audioProcessor.metronome1.numSubdivisions));
+    //prc2.setHandAngleByFraction(((float(audioProcessor.metronome2.totalSamplesSinceReset) / float(audioProcessor.metronome2.samplesPerSubdivision))) / float(audioProcessor.metronome2.numSubdivisions));
 }
-*/
+
 void MetroGnome2AudioProcessorEditor::actionListenerCallback(const juce::String& message) {
     //called when a the audioprocessor calls sendActionMessage
-    if (message == "beatCounter1") {
-       prc1.setHandAngle(audioProcessor.metronome1.beatCounter);
+    
+    if (message == "subdivisionCounter1") {
+       prc1.setHandAngleBySubdivision(audioProcessor.metronome1.getSubdivisionCounter());
    }
-    if (message == "beatCounter2") {
-       prc2.setHandAngle(audioProcessor.metronome2.beatCounter);
+    if (message == "subdivisionCounter2") {
+       prc2.setHandAngleBySubdivision(audioProcessor.metronome2.getSubdivisionCounter());
     }
 }

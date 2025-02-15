@@ -11,9 +11,23 @@
 #include "PolyRhythmCircle.h"
 
 
+PolyRhythmCircle::PolyRhythmCircle(juce::AudioProcessorValueTreeState& _apvts, juce::String _id, int _handWidth, int _buttonSize, bool _drawPolygons, juce::Colour _circleColour, juce::Colour _handColour, juce::Colour _buttonColour) : apvts(_apvts), id(_id) {
+    handWidth = _handWidth;
+    setButtonSize(_buttonSize);
+    circleColour = _circleColour;
+    handColour = _handColour;
+    buttonColour = _buttonColour;
+    for (int i = 0; i < MAX_LENGTH; i++) {
+        beatButtonAttachments[i] = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, _id + to_string(i), beatButtons[i]);
+        beatButtons[i].setClickingTogglesState(true);
+        addChildComponent(beatButtons[i]);
+        beatButtons[i].setColour(juce::TextButton::ColourIds::buttonColourId, COMPONENT_COLOUR_OFF);
+        beatButtons[i].setColour(juce::TextButton::ColourIds::buttonOnColourId, buttonColour);
+        beatButtons[i].addListener(this);
+    }
+}
 
-
-void PolyRhythmCircle::paint(juce::Graphics& g)
+void PolyRhythmCircle::paint(juce::Graphics& g) //
 {
     auto bounds = getLocalBounds().reduced(buttonSize/2);
     int width = bounds.getWidth();
@@ -27,7 +41,7 @@ void PolyRhythmCircle::paint(juce::Graphics& g)
     float circlePerimeter = rhythmCircle.getLength();
     g.setColour(circleColour);
 
-    if (numSubdivisions > 3){
+    if (numSubdivisions > 3 && drawAsPolygons == true){
         for (int i = 0; i <= numSubdivisions - 1; i++) {
             float startPointOnPath = (float(i) / numSubdivisions) * circlePerimeter;
             float endPointOnPath = (float(i + 1) / numSubdivisions) * circlePerimeter;

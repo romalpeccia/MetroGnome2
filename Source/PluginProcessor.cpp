@@ -99,31 +99,31 @@ void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
     if (*playParam) {
         metronome1.processBlock(buffer);
         metronome2.processBlock(buffer);
-        if (metronome1.beatCounter != beatCounter1 && metronome2.beatCounter != beatCounter2) {
+        if (metronome1.getSubdivisionCounter() != subdivisionCounter1 && metronome2.getSubdivisionCounter() != subdivisionCounter2) {
 
-            beatCounter1 = metronome1.beatCounter;
-            beatCounter2 = metronome2.beatCounter; 
-            if (*beatButtonParams1[beatCounter1] == true && *beatButtonParams2[beatCounter2] == true) { 
+            subdivisionCounter1 = metronome1.getSubdivisionCounter();
+            subdivisionCounter2 = metronome2.getSubdivisionCounter();
+            if (*beatButtonParams1[subdivisionCounter1] == true && *beatButtonParams2[subdivisionCounter2] == true) { 
                 addAudioToBuffer(buffer, *drumLowSample, metronome1);
             }
-            sendActionMessage("beatCounter1");
-            sendActionMessage("beatCounter2");
+            sendActionMessage("subdivisionCounter1");
+            sendActionMessage("subdivisionCounter2");
         }
-        else if (metronome1.beatCounter != beatCounter1) {
+        else if (metronome1.getSubdivisionCounter() != subdivisionCounter1) {
 
-            beatCounter1 = metronome1.beatCounter;
-            if (*beatButtonParams1[beatCounter1] == true) {
+            subdivisionCounter1 = metronome1.getSubdivisionCounter();
+            if (*beatButtonParams1[subdivisionCounter1] == true) {
                 addAudioToBuffer(buffer, *drumMidSample, metronome1);
             }
-            sendActionMessage("beatCounter1");
+            sendActionMessage("subdivisionCounter1");
         }
-        else if (metronome2.beatCounter != beatCounter2) {
+        else if (metronome2.getSubdivisionCounter() != subdivisionCounter2) {
 
-            beatCounter2 = metronome2.beatCounter;
-            if (*beatButtonParams2[beatCounter2] == true) {
+            subdivisionCounter2 = metronome2.getSubdivisionCounter();
+            if (*beatButtonParams2[subdivisionCounter2] == true) {
                 addAudioToBuffer(buffer, *drumHighSample, metronome2);
             }
-            sendActionMessage("beatCounter2");
+            sendActionMessage("subdivisionCounter2");
         }
     }
 
@@ -136,7 +136,7 @@ void MetroGnome2AudioProcessor::addAudioToBuffer(juce::AudioBuffer<float>& buffe
         sample.setNextReadPosition(0);
         juce::AudioSourceChannelInfo audioSourceChannelInfo = juce::AudioSourceChannelInfo(buffer);
         int bufferSize = buffer.getNumSamples();
-        int timeToStartPlaying = int(metronome.samplesPerDivision - metronome.samplesElapsed % metronome.samplesPerDivision);
+        int timeToStartPlaying = int(metronome.getSamplesPerSubdivision() - metronome.getTotalSamplesSinceReset() % metronome.getSamplesPerSubdivision());
 
         for (int samplenum = 0; samplenum <= bufferSize ; samplenum++) //TODO : I have no idea what this loop does or how it is affecting the getNextAudioBlock call in any way but it does something
         {
