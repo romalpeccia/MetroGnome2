@@ -34,13 +34,11 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4 {
         const Slider::SliderStyle style,
         Slider& slider) override
     {
-        //TODO: add label, remove ishorizontal calls?
-            auto trackWidth = jmin(6.0f, slider.isHorizontal() ? (float)height * 0.25f : (float)width * 0.25f);
+        //draws a horizontal slider
+            auto trackWidth = jmin(6.0f,  (float)height * 0.25f);
 
-            Point<float> startPoint(slider.isHorizontal() ? (float)x : (float)x + (float)width * 0.5f,
-                slider.isHorizontal() ? (float)y + (float)height * 0.5f : (float)(height + y));
-            Point<float> endPoint(slider.isHorizontal() ? (float)(width + x) : startPoint.x,
-                slider.isHorizontal() ? startPoint.y : (float)y);
+            Point<float> startPoint( (float)x ,(float)y + (float)height * 0.5f );
+            Point<float> endPoint((float)(width + x), startPoint.y);
 
             Path backgroundTrack;
             backgroundTrack.startNewSubPath(startPoint);
@@ -50,8 +48,8 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4 {
 
             Path valueTrack;
             Point<float> minPoint, maxPoint, thumbPoint;
-            auto kx = slider.isHorizontal() ? sliderPos : ((float)x + (float)width * 0.5f);
-            auto ky = slider.isHorizontal() ? ((float)y + (float)height * 0.5f) : sliderPos;
+            auto kx = sliderPos;
+            auto ky =  (float)y + (float)height * 0.5f;
             minPoint = startPoint;
             maxPoint = { kx, ky };
             valueTrack.startNewSubPath(minPoint);
@@ -62,30 +60,6 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4 {
             auto thumbWidth = getSliderThumbRadius(slider);
             g.setColour(slider.findColour(Slider::thumbColourId));
             g.fillEllipse(Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre( maxPoint));
-    }
-
-
-    void drawButtonText(Graphics& g, TextButton& button,
-        bool /*shouldDrawButtonAsHighlighted*/, bool /*shouldDrawButtonAsDown*/) override
-    {
-        Font font(getTextButtonFont(button, button.getHeight()));
-        g.setFont(font);
-        g.setColour(button.findColour(button.getToggleState() ? TextButton::textColourOnId
-            : TextButton::textColourOffId)
-            .withMultipliedAlpha(button.isEnabled() ? 1.0f : 0.5f));
-
-        const int yIndent = jmin(4, button.proportionOfHeight(0.3f));
-        const int cornerSize = jmin(button.getHeight(), button.getWidth()) / 2;
-
-        const int fontHeight = roundToInt(font.getHeight() * 0.6f);
-        const int leftIndent = jmin(fontHeight, 2 + cornerSize / (button.isConnectedOnLeft() ? 4 : 2));
-        const int rightIndent = jmin(fontHeight, 2 + cornerSize / (button.isConnectedOnRight() ? 4 : 2));
-        const int textWidth = button.getWidth() - leftIndent - rightIndent;
-
-        if (textWidth > 0)
-            g.drawFittedText(button.getButtonText(),
-                leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
-                Justification::centred, 2);
     }
 
 };
@@ -108,13 +82,9 @@ class CustomSlider : public juce::Slider {
         ~CustomSlider() {
             setLookAndFeel(nullptr);
         };
+
     private:
         CustomLookAndFeel lnf;
-        //juce::Label label;
-
-        //override resized function?
-        //or do something within LNF
-        //or lazy approach - just declare labels in the editor?
 };
 
 
@@ -125,7 +95,7 @@ class CustomTextButton : public juce::TextButton {
         };
         CustomTextButton(const juce::String &buttonName, const juce::Colour buttonColour) {
             setLookAndFeel(&lnf);
-            setColour(juce::TextButton::ColourIds::buttonOnColourId, buttonColour);
+            setColour(juce::TextButton::ColourIds::buttonOnColourId, buttonColour); 
             setColour(juce::TextButton::ColourIds::buttonColourId, COMPONENT_COLOUR_OFF);
             setButtonText(buttonName);
         };
@@ -135,7 +105,7 @@ class CustomTextButton : public juce::TextButton {
         void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
         {
             lnf.drawButtonBackground(g, *this,
-                findColour(getToggleState() ? buttonOnColourId : buttonColourId),
+                findColour(getToggleState() ? juce::TextButton::ColourIds::buttonOnColourId : juce::TextButton::ColourIds::buttonColourId),
                 shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
             lnf.drawButtonText(g, *this, shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
         } 

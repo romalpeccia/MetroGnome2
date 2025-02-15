@@ -66,7 +66,7 @@ public:
     void parameterChanged(const juce::String& parameterID, float newValue) override;
 
     PolyRhythmMetronome metronome1, metronome2;
-    //cache the beatCounters from the metronomes so we can keep track of when they change (alternatively, create another type of listener for that?)
+    //cache the beatCounters from the metronomes so we can keep track of when they change TODO: (alternatively, create another type of listener for that within metronome??)
     int beatCounter1 = 0; 
     int beatCounter2 = 0;
 

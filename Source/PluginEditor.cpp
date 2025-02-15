@@ -75,7 +75,7 @@ void MetroGnome2AudioProcessorEditor::resized()
     float prc1SizeFactor = 0.15;
     juce::Rectangle<int> prc1Bounds = topBounds.withTrimmedLeft(bounds.getWidth() * prc1SizeFactor + margin).withTrimmedRight(bounds.getWidth() * prc1SizeFactor + margin);
     float prc2SizeFactor = 0.3;
-    prc1.setBounds(prc1Bounds);
+    prc1.setBounds(prc1Bounds); 
     prc2.setBounds(prc1Bounds.reduced(prc1Bounds.getWidth()*prc2SizeFactor / 2)); 
     bpmSlider.setBounds(bottomLeftBounds);
     subdivision1Slider.setBounds(bottomMiddleBounds);
@@ -107,7 +107,7 @@ std::vector<juce::Component*> MetroGnome2AudioProcessorEditor::getVisibleComps()
 }
 
 void MetroGnome2AudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
-
+    //called when a slider value changes and adjusts the UI accordingly
     if (slider = &subdivision1Slider) {
         prc1.setNumSubdivisions(subdivision1Slider.getValue());
     }
@@ -124,7 +124,7 @@ void MetroGnome2AudioProcessorEditor::timerCallback() {
 }
 */
 void MetroGnome2AudioProcessorEditor::actionListenerCallback(const juce::String& message) {
-
+    //called when a the audioprocessor calls sendActionMessage
     if (message == "beatCounter1") {
        prc1.setHandAngle(audioProcessor.metronome1.beatCounter);
    }

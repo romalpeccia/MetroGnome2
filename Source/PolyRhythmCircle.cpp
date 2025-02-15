@@ -10,6 +10,9 @@
 
 #include "PolyRhythmCircle.h"
 
+
+
+
 void PolyRhythmCircle::paint(juce::Graphics& g)
 {
     auto bounds = getLocalBounds().reduced(buttonSize);
@@ -35,7 +38,7 @@ void PolyRhythmCircle::paint(juce::Graphics& g)
             beatButtons[i].setBounds(buttonBounds);    
         }
     }
-    for (int i = 0; i < MAX_LENGTH; i++) { //TODO: make MAX_LENGTH a variable
+    for (int i = 0; i < MAX_LENGTH; i++) {
         if (i < numSubdivisions) {
             beatButtons[i].setVisible(true);
         }

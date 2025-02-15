@@ -133,7 +133,7 @@ void MetroGnome2AudioProcessor::addAudioToBuffer(juce::AudioBuffer<float>& buffe
         int bufferSize = buffer.getNumSamples();
         int timeToStartPlaying = int(metronome.samplesPerDivision - metronome.samplesElapsed % metronome.samplesPerDivision);
 
-        for (int samplenum = 0; samplenum < bufferSize + 1; samplenum++) //TODO : I have no idea what this loop does or how it is affecting the getNextAudioBlock call in any way but it does something
+        for (int samplenum = 0; samplenum <= bufferSize ; samplenum++) //TODO : I have no idea what this loop does or how it is affecting the getNextAudioBlock call in any way but it does something
         {
             if (samplenum == timeToStartPlaying)
             {
