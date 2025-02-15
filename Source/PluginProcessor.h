@@ -63,6 +63,9 @@ public:
     std::atomic<float>* subdivision1Param;
     std::atomic<float>* subdivision2Param;
     std::atomic<float>* bpmParam;
+    std::atomic<float>* beatButtonParams1[MAX_LENGTH]; //TODO: tried initializing these in the polyrhythm circle class at first but it didn't make sense because it was part of the editor and the processor doesnt have acess to it ?
+    std::atomic<float>* beatButtonParams2[MAX_LENGTH];
+
     void parameterChanged(const juce::String& parameterID, float newValue) override;
 
     PolyRhythmMetronome metronome1, metronome2;

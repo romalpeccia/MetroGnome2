@@ -12,6 +12,7 @@
 
 void PolyRhythmMetronome::resetMetronome(int sampleRate, float _bpm, int _numSubdivisions) {
     //resets the class variables of the metronome, to be called when the metronome is stopped or has parameters changed
+
     numSubdivisions = _numSubdivisions;
     bpm = _bpm;
     samplesElapsed = 0;
@@ -20,10 +21,11 @@ void PolyRhythmMetronome::resetMetronome(int sampleRate, float _bpm, int _numSub
 }
 
 int PolyRhythmMetronome::calculateSamplesPerDivision(int sampleRate) {
-    //returns the number of samples representing the amount of time taken for a subdivision of the bar
-    int beatsPerBar = 4;
-    int samplesPerBar = beatsPerBar * ((60.0 / bpm) * sampleRate); // TODO: beatsPerBar, samplesPerBar are not clear in what that means (per Cycle) ?
-    return samplesPerBar / numSubdivisions;
+    //returns the number of samples representing the amount of time taken for a subdivision of the cycle
+
+    int beatsPerCycle = 4;
+    int samplesPerCycle = beatsPerCycle * ((60.0 / bpm) * sampleRate); 
+    return samplesPerCycle / numSubdivisions;
 }
 
 void PolyRhythmMetronome::processBlock(juce::AudioBuffer<float>& buffer) {

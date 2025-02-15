@@ -23,7 +23,7 @@ class PolyRhythmMetronome  {
         int calculateSamplesPerDivision(int sampleRate);
 
         float bpm = 120;
-        int numSubdivisions = 4;
+        int numSubdivisions = 4; //number of subdivisions the cycle is being split into
         int samplesElapsed = 0; //number of samples elapsed since the PolyRhythmMachine started
         int samplesPerDivision; //number of samples representating the time taken to complete one subdivision
         int beatCounter = 0; //counts which beat of the sequence has most recently played

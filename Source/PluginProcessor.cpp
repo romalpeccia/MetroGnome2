@@ -22,15 +22,20 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
                        )
 #endif
 {   
-    bpmParam = apvts.getRawParameterValue("BPM");
-    playParam = apvts.getRawParameterValue("PLAY");
-    subdivision1Param = apvts.getRawParameterValue("SUBDIVISION_1");
-    subdivision2Param = apvts.getRawParameterValue("SUBDIVISION_2");
-    apvts.addParameterListener("BPM", this);
-    apvts.addParameterListener("PLAY", this);
-    apvts.addParameterListener("SUBDIVISION_1", this);
-    apvts.addParameterListener("SUBDIVISION_2", this);
+    bpmParam = apvts.getRawParameterValue(BPM_STRING);
+    playParam = apvts.getRawParameterValue(PLAY_STRING);
+    subdivision1Param = apvts.getRawParameterValue(SUBDIVISION_1_STRING);
+    subdivision2Param = apvts.getRawParameterValue(SUBDIVISION_2_STRING);
+    for (int i = 0; i < MAX_LENGTH; i++) {
+        beatButtonParams1[i] = apvts.getRawParameterValue(CIRCLE_1_BEAT_STRING + to_string(i));
+        beatButtonParams2[i] = apvts.getRawParameterValue(CIRCLE_2_BEAT_STRING + to_string(i));
+    }
+    apvts.addParameterListener(BPM_STRING, this);
+    apvts.addParameterListener(PLAY_STRING, this);
+    apvts.addParameterListener(SUBDIVISION_1_STRING, this);
+    apvts.addParameterListener(SUBDIVISION_2_STRING, this);
 
+    //TODO: tried to make these into functions or even a custom class, got caught up because of the BinaryData:: datatype which I can't pass as an argument
     juce::MemoryInputStream* inputStream = new juce::MemoryInputStream(BinaryData::drum_low_wav, BinaryData::drum_low_wavSize, false);
     juce::WavAudioFormat wavFormat;
     juce::AudioFormatReader* formatReader = wavFormat.createReaderFor(inputStream, false);
@@ -56,15 +61,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout MetroGnome2AudioProcessor::c
     //Creates all the parameters that change based on the user input and returns them in a AudioProcessorValueTreeState::ParameterLayout object
 
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
-    layout.add(std::make_unique<juce::AudioParameterBool>("PLAY", "play", false));
-    layout.add(std::make_unique<juce::AudioParameterFloat>("BPM", "bpm", juce::NormalisableRange<float>(1.f, 300.f, 0.1f, 0.5f), 120.f));
-    layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_1", "Subdivision 1", 1, MAX_LENGTH, 1));
-    layout.add(std::make_unique<juce::AudioParameterInt>("SUBDIVISION_2", "Subdivision 2", 1, MAX_LENGTH, 1));
+    layout.add(std::make_unique<juce::AudioParameterBool>(PLAY_STRING, PLAY_STRING.toLowerCase(), false));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(BPM_STRING, BPM_STRING.toLowerCase(), juce::NormalisableRange<float>(1.f, 300.f, 0.1f, 0.5f), 120.f));
+    layout.add(std::make_unique<juce::AudioParameterInt>(SUBDIVISION_1_STRING, SUBDIVISION_1_STRING.toLowerCase(), 1, MAX_LENGTH, 1));
+    layout.add(std::make_unique<juce::AudioParameterInt>(SUBDIVISION_2_STRING, SUBDIVISION_2_STRING.toLowerCase(), 1, MAX_LENGTH, 1));
 
 
     for (int i = 0; i < MAX_LENGTH; i++) {
-        layout.add(std::make_unique<juce::AudioParameterBool>("CIRCLE_1_BEAT_" + to_string(i), "Circle 1 Beat " + to_string(i), true));
-        layout.add(std::make_unique<juce::AudioParameterBool>("CIRCLE_2_BEAT_" + to_string(i), "Circle 2 Beat " + to_string(i), true));
+        layout.add(std::make_unique<juce::AudioParameterBool>(CIRCLE_1_BEAT_STRING + to_string(i), CIRCLE_1_BEAT_STRING.toLowerCase() + to_string(i), true));
+        layout.add(std::make_unique<juce::AudioParameterBool>(CIRCLE_2_BEAT_STRING + to_string(i), CIRCLE_2_BEAT_STRING.toLowerCase() + to_string(i), true));
     }
     return layout;
 
@@ -97,8 +102,8 @@ void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
         if (metronome1.beatCounter != beatCounter1 && metronome2.beatCounter != beatCounter2) {
 
             beatCounter1 = metronome1.beatCounter;
-            beatCounter2 = metronome2.beatCounter;
-            if (apvts.getRawParameterValue("CIRCLE_1_BEAT_" + to_string(beatCounter1))->load() == true && apvts.getRawParameterValue("CIRCLE_2_BEAT_" + to_string(beatCounter2))->load() == true) { //TODO: use params instead of loading like this
+            beatCounter2 = metronome2.beatCounter; 
+            if (*beatButtonParams1[beatCounter1] == true && *beatButtonParams2[beatCounter2] == true) { 
                 addAudioToBuffer(buffer, *drumLowSample, metronome1);
             }
             sendActionMessage("beatCounter1");
@@ -107,7 +112,7 @@ void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
         else if (metronome1.beatCounter != beatCounter1) {
 
             beatCounter1 = metronome1.beatCounter;
-            if (apvts.getRawParameterValue("CIRCLE_1_BEAT_" + to_string(beatCounter1))->load() == true) {
+            if (*beatButtonParams1[beatCounter1] == true) {
                 addAudioToBuffer(buffer, *drumMidSample, metronome1);
             }
             sendActionMessage("beatCounter1");
@@ -115,7 +120,7 @@ void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
         else if (metronome2.beatCounter != beatCounter2) {
 
             beatCounter2 = metronome2.beatCounter;
-            if (apvts.getRawParameterValue("CIRCLE_2_BEAT_" + to_string(beatCounter2))->load() == true) {
+            if (*beatButtonParams2[beatCounter2] == true) {
                 addAudioToBuffer(buffer, *drumHighSample, metronome2);
             }
             sendActionMessage("beatCounter2");
@@ -146,6 +151,7 @@ void MetroGnome2AudioProcessor::addAudioToBuffer(juce::AudioBuffer<float>& buffe
 
 void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID, float newValue)
 {
+    //any parameters added by addParameterListener("parameter", MetroGnome2AudioProcessor) will trigger this function
     metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
     metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
     DBG("Parameter " << parameterID << " has changed to " << newValue);

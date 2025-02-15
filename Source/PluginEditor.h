@@ -36,13 +36,12 @@ private:
     MetroGnome2AudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& apvts;
 
-    CustomSlider bpmSlider, subdivision1Slider{ MAIN_COLOUR, BUTTON_COLOUR_1 }, subdivision2Slider{ SECONDARY_COLOUR, BUTTON_COLOUR_2 };
-    juce::Label bpmLabel{ "bpmSlider" , "BPM"}, subdivision1Label{"subdivision1Slider", "Outer Subdivisions"}, subdivision2Label{"subdivision2Slider", "Inner Subdivisions"};
+    CustomSlider bpmSlider{"BPM"}, subdivision1Slider{MAIN_COLOUR, BUTTON_COLOUR_1, "Outer Subdivisions"}, subdivision2Slider{SECONDARY_COLOUR, BUTTON_COLOUR_2, "Inner Subdivisions"};
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bpmAttachment, subdivision1Attachment, subdivision2Attachment;
 
-    PolyRhythmCircle prc1{apvts, "CIRCLE_1_BEAT_", 4, BUTTON_SIZE, MAIN_COLOUR, SECONDARY_COLOUR , BUTTON_COLOUR_1}; 
-    PolyRhythmCircle prc2{ apvts, "CIRCLE_2_BEAT_", 4, BUTTON_SIZE/2, SECONDARY_COLOUR, MAIN_COLOUR, BUTTON_COLOUR_2 };
-    CustomTextButton playButton{ "PLAY", MAIN_COLOUR };
+    PolyRhythmCircle prc1{apvts, CIRCLE_1_BEAT_STRING, 4, BUTTON_SIZE, MAIN_COLOUR, SECONDARY_COLOUR , BUTTON_COLOUR_1}; 
+    PolyRhythmCircle prc2{ apvts, CIRCLE_2_BEAT_STRING, 4, BUTTON_SIZE/2, SECONDARY_COLOUR, MAIN_COLOUR, BUTTON_COLOUR_2 };
+    CustomTextButton playButton{ PLAY_STRING, MAIN_COLOUR };
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> playAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MetroGnome2AudioProcessorEditor)
