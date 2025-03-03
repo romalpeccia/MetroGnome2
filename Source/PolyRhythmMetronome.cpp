@@ -35,11 +35,50 @@ void PolyRhythmMetronome::processBlock(juce::AudioBuffer<float>& buffer) {
     //process the incoming audio block, using the total number of samples in the audio block to calculate time elapsed
     int bufferSize = buffer.getNumSamples();
     totalSamplesSinceReset += bufferSize;
-    int subdvisionSamplesElapsed = totalSamplesSinceReset % samplesPerSubdivision;
-    if (subdvisionSamplesElapsed + bufferSize >= samplesPerSubdivision) {
+    int samplesSinceSubdivisionStart = totalSamplesSinceReset % samplesPerSubdivision; 
+    if (samplesSinceSubdivisionStart + bufferSize >= samplesPerSubdivision) { 
         subdivisionCounter += 1;
         if (subdivisionCounter >= numSubdivisions) {
             subdivisionCounter = 0;
         }
     }
+}
+
+void PolyRhythmMetronome::setBpm(float _bpm) {
+    if (bpm <= 0) {
+        throw std::invalid_argument("received invalid value");
+    }
+    bpm = _bpm;
+}
+float PolyRhythmMetronome::getBpm() { 
+    return bpm; 
+}
+
+void PolyRhythmMetronome::setNumSubdivisions(int _numSubdivisions) {
+    if (numSubdivisions < 1) {
+        throw std::invalid_argument("received invalid value");
+    }
+    numSubdivisions = _numSubdivisions;
+}
+int PolyRhythmMetronome::getNumSubdivisions() { 
+    return numSubdivisions; 
+}
+
+int PolyRhythmMetronome::getTotalSamplesSinceReset() {
+    return totalSamplesSinceReset; 
+}
+
+void PolyRhythmMetronome::setSamplesPerSubdivision(int _samplesPerSubdivision) { 
+    samplesPerSubdivision = _samplesPerSubdivision; 
+}
+int PolyRhythmMetronome::getSamplesPerSubdivision() {
+    return samplesPerSubdivision;
+}
+
+void PolyRhythmMetronome::setSubdivisionCounter(int _subdivisionCounter) { 
+    subdivisionCounter = _subdivisionCounter; 
+}
+
+int PolyRhythmMetronome::getSubdivisionCounter() { 
+    return subdivisionCounter; 
 }

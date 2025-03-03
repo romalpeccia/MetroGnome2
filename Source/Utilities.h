@@ -53,7 +53,7 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4 {
         g.strokePath(backgroundTrack, { trackWidth, PathStrokeType::curved, PathStrokeType::rounded });
 
         Path valueTrack;
-        Point<float> minPoint, maxPoint, thumbPoint;
+        Point<float> minPoint, maxPoint;
         auto kx = sliderPos;
         auto ky =  (float)y + (float)height * 0.5f;
         minPoint = startPoint;

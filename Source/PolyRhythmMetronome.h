@@ -23,30 +23,20 @@ class PolyRhythmMetronome  {
         int calculateSamplesPerSubdivision(int sampleRate, int beatsPerBar = 4); //
 
 
-        void setBpm(float _bpm) {
-            if (bpm <= 0) {
-                throw std::invalid_argument("received invalid value");
-            }
-            bpm = _bpm;
-        }
-        float getBpm() { return bpm; }
+        void setBpm(float _bpm);
+        float getBpm();
 
-        void setNumSubdivisions(int _numSubdivisions) { 
-            if (numSubdivisions < 1) {
-                throw std::invalid_argument("received invalid value");
-            }
-            numSubdivisions = _numSubdivisions;
-        }
-        int getNumSubdivisions() { return numSubdivisions; }
+        void setNumSubdivisions(int _numSubdivisions);
+        int getNumSubdivisions();
 
         //void setTotalSamplesSinceReset(int _totalSamplesSinceReset) { totalSamplesSinceReset = _totalSamplesSinceReset; }
-        int getTotalSamplesSinceReset() { return totalSamplesSinceReset; }
+        int getTotalSamplesSinceReset();
 
-        void setSamplesPerSubdivision(int _samplesPerSubdivision) { samplesPerSubdivision = _samplesPerSubdivision; }
-        int getSamplesPerSubdivision() { return samplesPerSubdivision; }
+        void setSamplesPerSubdivision(int _samplesPerSubdivision);
+        int getSamplesPerSubdivision();
 
-        void setSubdivisionCounter(int _subdivisionCounter) { subdivisionCounter = _subdivisionCounter; }
-        int getSubdivisionCounter() { return subdivisionCounter; }
+        void setSubdivisionCounter(int _subdivisionCounter);
+        int getSubdivisionCounter();
 
 
 

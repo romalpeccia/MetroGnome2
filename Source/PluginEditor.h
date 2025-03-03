@@ -15,7 +15,7 @@
 //==============================================================================
 /**
 */
-class MetroGnome2AudioProcessorEditor : public juce::AudioProcessorEditor, juce::Slider::Listener, juce::Timer, juce::ActionListener
+class MetroGnome2AudioProcessorEditor : public juce::AudioProcessorEditor, juce::Slider::Listener, juce::ActionListener
 {
 public:
     MetroGnome2AudioProcessorEditor(MetroGnome2AudioProcessor&, juce::AudioProcessorValueTreeState &); 
@@ -24,10 +24,8 @@ public:
     //==============================================================================
     void paint(juce::Graphics&) override;
     void resized() override;
+
     void sliderValueChanged(juce::Slider *) override;
-
-    void timerCallback() override;
-
     std::vector<juce::Component*> getVisibleComps();
     void actionListenerCallback(const juce::String&) override;
 
@@ -40,7 +38,7 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bpmAttachment, subdivision1Attachment, subdivision2Attachment;
 
     PolyRhythmCircle prc1{apvts, CIRCLE_1_BEAT_STRING, 4, BUTTON_SIZE, true, MAIN_COLOUR, SECONDARY_COLOUR , BUTTON_COLOUR_1}; 
-    PolyRhythmCircle prc2{ apvts, CIRCLE_2_BEAT_STRING, 4, BUTTON_SIZE/2, true, SECONDARY_COLOUR, MAIN_COLOUR, BUTTON_COLOUR_2 };
+    PolyRhythmCircle prc2{apvts, CIRCLE_2_BEAT_STRING, 4, BUTTON_SIZE/2, true, SECONDARY_COLOUR, MAIN_COLOUR, BUTTON_COLOUR_2};
     CustomTextButton playButton{ PLAY_STRING, MAIN_COLOUR };
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> playAttachment;
 

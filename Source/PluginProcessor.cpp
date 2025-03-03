@@ -35,7 +35,7 @@ MetroGnome2AudioProcessor::MetroGnome2AudioProcessor()
     apvts.addParameterListener(SUBDIVISION_1_STRING, this);
     apvts.addParameterListener(SUBDIVISION_2_STRING, this);
 
-    //TODO: tried to make these into functions or even a custom class, got caught up because of the BinaryData:: datatype which I can't pass as an argument
+    //NOTE: tried to make these DRY into functions or even a custom class, got caught up because of the BinaryData:: datatype from Projucer which I can't pass as an argument
     juce::MemoryInputStream* inputStream = new juce::MemoryInputStream(BinaryData::drum_low_wav, BinaryData::drum_low_wavSize, false);
     juce::WavAudioFormat wavFormat;
     juce::AudioFormatReader* formatReader = wavFormat.createReaderFor(inputStream, false);
@@ -96,11 +96,12 @@ void MetroGnome2AudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
 
 void MetroGnome2AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    buffer.clear();
     if (*playParam) {
         metronome1.processBlock(buffer);
         metronome2.processBlock(buffer);
         if (metronome1.getSubdivisionCounter() != subdivisionCounter1 && metronome2.getSubdivisionCounter() != subdivisionCounter2) {
-
+            //if both beats trigger at the same time, play a different sound
             subdivisionCounter1 = metronome1.getSubdivisionCounter();
             subdivisionCounter2 = metronome2.getSubdivisionCounter();
             if (*beatButtonParams1[subdivisionCounter1] == true && *beatButtonParams2[subdivisionCounter2] == true) { 
@@ -135,17 +136,7 @@ void MetroGnome2AudioProcessor::addAudioToBuffer(juce::AudioBuffer<float>& buffe
     {
         sample.setNextReadPosition(0);
         juce::AudioSourceChannelInfo audioSourceChannelInfo = juce::AudioSourceChannelInfo(buffer);
-        int bufferSize = buffer.getNumSamples();
-        int timeToStartPlaying = int(metronome.getSamplesPerSubdivision() - metronome.getTotalSamplesSinceReset() % metronome.getSamplesPerSubdivision());
-
-        for (int samplenum = 0; samplenum <= bufferSize ; samplenum++) //TODO : I have no idea what this loop does or how it is affecting the getNextAudioBlock call in any way but it does something
-        {
-            if (samplenum == timeToStartPlaying)
-            {
-                sample.getNextAudioBlock(audioSourceChannelInfo);
-                break;
-            }
-        }
+        sample.getNextAudioBlock(audioSourceChannelInfo);
     }
 }
 
@@ -154,14 +145,8 @@ void MetroGnome2AudioProcessor::parameterChanged(const juce::String& parameterID
     //any parameters added by addParameterListener("parameter", MetroGnome2AudioProcessor) will trigger this function
     metronome1.resetMetronome(getSampleRate(), *bpmParam, *subdivision1Param);
     metronome2.resetMetronome(getSampleRate(), *bpmParam, *subdivision2Param);
-    DBG("Parameter " << parameterID << " has changed to " << newValue);
+    //DBG("Parameter " << parameterID << " has changed to " << newValue);
 }
-
-
-
-
-
-
 
 juce::AudioProcessorEditor* MetroGnome2AudioProcessor::createEditor()
 {

@@ -21,7 +21,6 @@ MetroGnome2AudioProcessorEditor::MetroGnome2AudioProcessorEditor (MetroGnome2Aud
 
     playAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, PLAY_STRING, playButton);
     playButton.setClickingTogglesState(true);
-    //playButton.addListener(this); //TODO: why doesn't this work like it does with the sliders? janky fix: just checkplayParam in processor 
       
     for (auto* comp : getVisibleComps())
     {
@@ -33,7 +32,6 @@ MetroGnome2AudioProcessorEditor::MetroGnome2AudioProcessorEditor (MetroGnome2Aud
     audioProcessor.addActionListener(this);
     setResizable(true, true);
     setSize (PLUGIN_WIDTH, PLUGIN_HEIGHT);
-    startTimer(TIMER_INTERVAL);
 }
 
 MetroGnome2AudioProcessorEditor::~MetroGnome2AudioProcessorEditor()
@@ -49,8 +47,7 @@ void MetroGnome2AudioProcessorEditor::paint (juce::Graphics& g)
 
 void MetroGnome2AudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    //layout the top 2/3rds of the UI to contain the PolyRhythmCircles, and split the bottom 1/3rd of the UI into 1/3rds, for the 3 sliders
     int margin = 5;
     juce::Rectangle<int> bounds = getLocalBounds();
     juce::Rectangle<int> topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.33 + margin).withTrimmedTop(margin);
@@ -59,12 +56,14 @@ void MetroGnome2AudioProcessorEditor::resized()
     juce::Rectangle<int> bottomRightBounds = bottomBounds.withTrimmedLeft(bounds.getWidth() * 0.66 + margin);
     juce::Rectangle<int> bottomMiddleBounds = bottomBounds.withTrimmedLeft(bounds.getWidth() * 0.33 + margin).withTrimmedRight(bounds.getWidth() * 0.33 + margin);
 
+    //set the bounds of the PolyRhythmCircles
     float prc1SizeFactor = 0.15;
     juce::Rectangle<int> prc1Bounds = topBounds.withTrimmedLeft(bounds.getWidth() * prc1SizeFactor + margin).withTrimmedRight(bounds.getWidth() * prc1SizeFactor + margin);
     float prc2SizeFactor = 0.3;
     prc1.setBounds(prc1Bounds); 
     prc2.setBounds(prc1Bounds.reduced(prc1Bounds.getWidth()*prc2SizeFactor / 2)); 
 
+    //set the bounds of the controls
     bpmSlider.setBounds(bottomLeftBounds);
     subdivision1Slider.setBounds(bottomMiddleBounds);
     subdivision2Slider.setBounds(bottomRightBounds);
@@ -87,19 +86,12 @@ std::vector<juce::Component*> MetroGnome2AudioProcessorEditor::getVisibleComps()
 
 void MetroGnome2AudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
     //called when a slider value changes and adjusts the UI accordingly
-    if (slider = &subdivision1Slider) {
+    if (slider == &subdivision1Slider) {
         prc1.setNumSubdivisions(subdivision1Slider.getValue());
     }
-    if (slider = &subdivision2Slider) {
+    if (slider == &subdivision2Slider) {
         prc2.setNumSubdivisions(subdivision2Slider.getValue());
     }
-  
-}
-
-void MetroGnome2AudioProcessorEditor::timerCallback() {
-    //callback for finer precision of handAngle
-    //prc1.setHandAngleByFraction( ((float(audioProcessor.metronome1.totalSamplesSinceReset) / float(audioProcessor.metronome1.samplesPerSubdivision))) / float(audioProcessor.metronome1.numSubdivisions));
-    //prc2.setHandAngleByFraction(((float(audioProcessor.metronome2.totalSamplesSinceReset) / float(audioProcessor.metronome2.samplesPerSubdivision))) / float(audioProcessor.metronome2.numSubdivisions));
 }
 
 void MetroGnome2AudioProcessorEditor::actionListenerCallback(const juce::String& message) {
