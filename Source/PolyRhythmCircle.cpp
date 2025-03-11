@@ -89,10 +89,6 @@ void PolyRhythmCircle::paint(juce::Graphics& g) //
     g.fillPath(clockHand);
 }
 
-void PolyRhythmCircle::resized() {
-
-}
-
 void PolyRhythmCircle::setNumSubdivisions(int num) {
     if (num < 1) {
         throw std::invalid_argument("received invalid value");
